@@ -62,8 +62,18 @@ public class MainActivity extends AppCompatActivity {
 
 
         Model m = new Model();
-        m.setTitleList("News fidlfsdl");
-        m.setDiscList("lsdjflsjdf");
+        m.setTitleList("My heading");
+        m.setDiscList("my discription");
+        models.add(m);
+
+
+        m.setTitleList("My heading");
+        m.setDiscList("my discription");
+        models.add(m);
+
+
+        m.setTitleList("My heading");
+        m.setDiscList("my discription");
         models.add(m);
         return models;
 
