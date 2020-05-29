@@ -26,7 +26,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_layout, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_layout, parent,false);
         // this above line infalte the card_layout file
         return new MyViewHolder(view);
         // this will return the view to holder class
