@@ -1,6 +1,7 @@
 package com.example.digitaltoken;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.ColorSpace;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,8 +36,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        MyViewHolder.mtextViewHead.setText(models.get(position).getTitleList());
-        MyViewHolder.mtextViewDisc.setText(models.get(position).getDiscList());
+        holder.mtextViewHead.setText(models.get(position).getTitleList());
+        holder.mtextViewDisc.setText(models.get(position).getDiscList());
+
+        holder.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onItemClickListener(View v, int position) {
+
+                String gTiltle = models.get(position).getTitleList();
+                String gDisc = models.get(position).getDiscList();
+
+                Intent intent = new Intent(c, TokenStatus.class);
+                intent.putExtra("iTitle", gTiltle);
+                intent.putExtra("iDisc", gDisc);
+                c.startActivity(intent);
+            }
+        });
     }
 
     @Override
