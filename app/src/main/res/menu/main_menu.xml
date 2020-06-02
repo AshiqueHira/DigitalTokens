@@ -2,6 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="Log in"
-        android:id="@+id/logIn"></item>
+        android:title="Admin"
+        android:id="@+id/admin"></item>
 </menu>
