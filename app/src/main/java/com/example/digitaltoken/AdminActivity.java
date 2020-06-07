@@ -3,8 +3,11 @@ package com.example.digitaltoken;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +30,9 @@ public class AdminActivity extends AppCompatActivity {
     EditText notesEditText;
     EditText openEditText;
 
+    int count;
+    String value;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,19 +40,24 @@ public class AdminActivity extends AppCompatActivity {
 
         notesTextView = findViewById(R.id.notesTextView);
         counterTextView = findViewById(R.id.counterTextView);
+
+
         openTextView = findViewById(R.id.openTextView);
 
+        //count = Integer.parseInt((String) counterTextView.getText());
         counterEditButton = findViewById(R.id.counterEditbutton);
         notesEditButton = findViewById(R.id.notesEditbutton);
 
         counterEditText = new EditText(this);
         counterEditText.setHint("Enter the Count value here");
-        
+        counterEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+
         notesEditText = new EditText(this);
         notesEditText.setHint("Enter the Notes here");
 
         openEditText = new EditText(this);
-        openEditText.setHint("OPEN : 8:00 AM and CLOSE : 5:00 PM");
+        openEditText.setHint("OPEN : 8:00 AM & CLOSE : 5:00 PM");
+        openEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(35)});
 
 
         dialogCounter = new AlertDialog.Builder(this).create();
@@ -66,7 +77,12 @@ public class AdminActivity extends AppCompatActivity {
         dialogCounter.setButton(DialogInterface.BUTTON_POSITIVE, "Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
                 counterTextView.setText(counterEditText.getText());
+                value = counterEditText.getText().toString();
+
+                count = Integer.parseInt(value);
+
             }
         });
 
@@ -89,11 +105,12 @@ public class AdminActivity extends AppCompatActivity {
         openTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                openEditText.setText(openTextView.getText());
+                openEditText.setText(Integer.toString(count));
                 dialogOpen.show();
                 return true;
             }
         });
+
 
     }
 
@@ -108,4 +125,19 @@ public class AdminActivity extends AppCompatActivity {
         dialogNotes.show();
     }
 
+    public void plusOne(View view) {
+
+        count += 1;
+        counterTextView.setText(Integer.toString(count));
+
+    }
+
+    public void minusOne(View view) {
+
+        count -= 1;
+        counterTextView.setText(Integer.toString(count));
+
+    }
+
 }
+

@@ -4,6 +4,15 @@ public class Model {
 
     private String titleList;
     private String discList;
+    private int img;
+
+    public int getImg() {
+        return img;
+    }
+
+    public void setImg(int img) {
+        this.img = img;
+    }
 
     public void setTitleList(String titleList) {
         this.titleList = titleList;

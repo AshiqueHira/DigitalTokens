@@ -31,7 +31,7 @@
         android:layout_marginTop="16dp"
         android:background="#DFFADEDE"
         android:paddingTop="18dp"
-        android:text="102"
+        android:text="0"
         android:textAlignment="center"
         android:textColor="#CC1414"
         android:textSize="75dp"
@@ -70,7 +70,7 @@
         android:layout_height="0dp"
         android:background="#61FFFFFF"
         android:paddingLeft="15dp"
-        android:paddingTop="10dp"
+        android:paddingTop="20dp"
         android:textAlignment="viewStart"
         android:textColor="#000000"
         android:textSize="20sp"
@@ -104,13 +104,14 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/plusOne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="55dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="56dp"
         android:background="@drawable/button_style"
+        android:onClick="plusOne"
         android:text="+"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/counterTextView"
@@ -118,13 +119,14 @@
         app:layout_constraintTop_toTopOf="@+id/counterTextView" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/minusOne"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="55dp"
         android:layout_marginBottom="58dp"
         android:background="@drawable/button_style"
+        android:onClick="minusOne"
         android:text="-"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@+id/counterTextView"

@@ -65,18 +65,53 @@ public class MainActivity extends AppCompatActivity {
 
 
         Model m = new Model();
-        m.setTitleList("My heading");
-        m.setDiscList("my discription");
+        m.setTitleList("Ration Shop");
+        m.setDiscList("Orkkateri, Vadakara");
+        m.setImg(R.drawable.rationcard);
+
         models.add(m);
 
 
-        m.setTitleList("My heading");
-        m.setDiscList("my discription");
+        m = new Model();
+        m.setTitleList("Dr. Salam MBBS, MD GENERAL MEDICINE");
+        m.setDiscList("Care Pharma, Orkkateri, Vadakara");
+        m.setImg(R.drawable.clinic);
         models.add(m);
 
+        m = new Model();
+        m.setTitleList("Canara Bank");
+        m.setDiscList("Orkkateri, Vadakara");
+        m.setImg(R.drawable.canara);
+        models.add(m);
 
-        m.setTitleList("My heading");
-        m.setDiscList("my discription");
+        m = new Model();
+        m.setTitleList("Flour Mill");
+        m.setDiscList("OPK, Orkkateri");
+        m.setImg(R.drawable.flour);
+        models.add(m);
+
+        m = new Model();
+        m.setTitleList("Syndicate Bank");
+        m.setDiscList("Orkkateri, Vadakara");
+        m.setImg(R.drawable.syndicate);
+        models.add(m);
+
+        m = new Model();
+        m.setTitleList("Dr. Vijayan MBBS, MD GENERAL MEDICINE");
+        m.setDiscList("Home, Vellikulangara");
+        m.setImg(R.drawable.homedr);
+        models.add(m);
+
+        m = new Model();
+        m.setTitleList("SBI Bank");
+        m.setDiscList("Orkkateri, Vadakara");
+        m.setImg(R.drawable.sbi);
+        models.add(m);
+
+        m = new Model();
+        m.setTitleList("Dr. Salam MBBS, MD GENERAL MEDICINE");
+        m.setDiscList("Sahakarana Hospital, Orkkateri");
+        m.setImg(R.drawable.hospital);
         models.add(m);
         return models;
 

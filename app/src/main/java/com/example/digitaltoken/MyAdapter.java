@@ -38,7 +38,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
         holder.mtextViewHead.setText(models.get(position).getTitleList());
         holder.mtextViewDisc.setText(models.get(position).getDiscList());
-
+        holder.mImageView.setImageResource(models.get(position).getImg());
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onItemClickListener(View v, int position) {
