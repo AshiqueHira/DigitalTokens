@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="#DFFADEDE"
-        android:text="YOUR TOKEN NUMBER"
+        android:text="TOKEN NUMBER"
         android:textAlignment="center"
         android:textColor="#0C0C0C"
         app:layout_constraintEnd_toEndOf="parent"
@@ -76,34 +76,40 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/yourTokenText"
         android:layout_width="120dp"
         android:layout_height="80dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="10dp"
-        android:text="TextView"
+        android:background="#E3F6D5"
+        android:text="Your Token"
+        android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/counterTextView" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/oneTimeText"
         android:layout_width="120dp"
         android:layout_height="80dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toStartOf="@+id/textView6"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
+        android:background="#E3F6D5"
+        android:text="One Token Time"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/estimatedText"
+        app:layout_constraintStart_toEndOf="@+id/yourTokenText"
         app:layout_constraintTop_toBottomOf="@+id/counterTextView" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/estimatedText"
         android:layout_width="120dp"
         android:layout_height="80dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="15dp"
-        android:text="TextView"
+        android:background="#E3F6D5"
+        android:text="Estimated Time"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/counterTextView" />
 
@@ -116,7 +122,7 @@
         android:textSize="18dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/yourTokenText" />
 
     <TextView
         android:id="@+id/textView8"

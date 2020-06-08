@@ -80,8 +80,11 @@ public class AdminActivity extends AppCompatActivity {
 
                 counterTextView.setText(counterEditText.getText());
                 value = counterEditText.getText().toString();
-
-                count = Integer.parseInt(value);
+                if (value.equals("")) {
+                    count = 0;
+                } else {
+                    count = Integer.parseInt(value);
+                }
 
             }
         });
