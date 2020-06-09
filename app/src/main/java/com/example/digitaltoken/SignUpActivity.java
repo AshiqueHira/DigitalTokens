@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -22,6 +23,9 @@ public class SignUpActivity extends AppCompatActivity {
         alreadyTextView = findViewById(R.id.alreadyTextView);
 
         Intent intent = getIntent();
+        String businessType = intent.getStringExtra("businessType");
+        //Toast.makeText(this, businessType, Toast.LENGTH_LONG).show();
+
     }
 
     public void register(View view) {

@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void dontHave(View view) {
-        Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+        Intent intent = new Intent(getApplicationContext(), TypeActivity.class);
         startActivity(intent);
     }
 

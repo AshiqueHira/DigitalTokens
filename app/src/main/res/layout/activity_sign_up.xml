@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="170dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="170dp"
         android:text="Register"
         android:textColor="#FFFFFF"
@@ -36,7 +36,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
     <EditText
-        android:id="@+id/domainName"
+        android:id="@+id/nameTextView"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="15dp"
@@ -44,7 +44,7 @@
         android:layout_marginEnd="15dp"
         android:background="#FFFFFF"
         android:ems="10"
-        android:hint="Domain name"
+        android:hint="Name(eg: X Bank, Dr. X MBBS,MD)"
         android:inputType="textPersonName"
         android:paddingLeft="10dp"
         android:textColor="#000000"
@@ -71,26 +71,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/domainName" />
-
-    <EditText
-        android:id="@+id/userName"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="15dp"
-        android:background="#FFFFFF"
-        android:ems="10"
-        android:hint="Your Name"
-        android:inputType="textPersonName"
-        android:paddingLeft="10dp"
-        android:textColor="#000000"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/location" />
+        app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
 
     <EditText
         android:id="@+id/emailId"
@@ -166,7 +147,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/userName" />
+        app:layout_constraintTop_toBottomOf="@+id/location" />
 
     <Button
         android:id="@+id/registerButton"
