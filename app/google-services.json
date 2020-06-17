@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "143832622733",
+    "firebase_url": "https://itoken-bbcc6.firebaseio.com",
+    "project_id": "itoken-bbcc6",
+    "storage_bucket": "itoken-bbcc6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143832622733:android:35326e4219267bda73e4c4",
+        "android_client_info": {
+          "package_name": "com.example.digitaltoken"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "143832622733-cgb9i1k6rlpiv5m912h99v74a21srpev.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQnIsV1mCC-ggQOEArnjrFnbLREa-FXEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "143832622733-cgb9i1k6rlpiv5m912h99v74a21srpev.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

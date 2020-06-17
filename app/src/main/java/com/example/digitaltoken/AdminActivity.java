@@ -1,19 +1,31 @@
 package com.example.digitaltoken;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.auth.FirebaseAuth;
+
 public class AdminActivity extends AppCompatActivity {
+
+    Toolbar toolbar;
 
     TextView notesTextView;
     TextView counterTextView;
@@ -34,9 +46,19 @@ public class AdminActivity extends AppCompatActivity {
     String value;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.admin_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin);
+
+        toolbar = findViewById(R.id.myActionBar);
+        setSupportActionBar(toolbar);
 
         notesTextView = findViewById(R.id.notesTextView);
         counterTextView = findViewById(R.id.counterTextView);
@@ -80,7 +102,7 @@ public class AdminActivity extends AppCompatActivity {
 
                 counterTextView.setText(counterEditText.getText());
                 value = counterEditText.getText().toString();
-                if (value.equals("")) {
+                if (TextUtils.isEmpty(value)) {
                     count = 0;
                 } else {
                     count = Integer.parseInt(value);
@@ -108,7 +130,7 @@ public class AdminActivity extends AppCompatActivity {
         openTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                openEditText.setText(Integer.toString(count));
+                openEditText.setText(openTextView.getText().toString());
                 dialogOpen.show();
                 return true;
             }
@@ -140,6 +162,20 @@ public class AdminActivity extends AppCompatActivity {
         count -= 1;
         counterTextView.setText(Integer.toString(count));
 
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        if (item.getItemId() == R.id.signout) {
+
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            return true;
+        }
+        return false;
     }
 
 }
