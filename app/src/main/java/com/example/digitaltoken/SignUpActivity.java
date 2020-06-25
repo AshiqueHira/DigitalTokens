@@ -11,6 +11,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +29,20 @@ public class SignUpActivity extends AppCompatActivity {
     String myCity = "--Select Your District--";
     String myTown = "--Select Your Town--";
     String myStreet = "--Select Your Street--";
-
     boolean errorToast = true;
+
+    DatabaseReference usersDataReference;
+    FirebaseUser user;
+
+    //////////////////////// initialise strings and stuffs
+    String userid = "A";
+    String userEmail = "A";
+    String userPhone = "A";
+    String userBusiness = "A";
+    String userName = "A";
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +50,16 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up);
 
         Intent intent = getIntent();
-        String userEmail = intent.getStringExtra("email");
-        String userPhone = intent.getStringExtra("phoneNumber");
-        String userBusiness = intent.getStringExtra("bussinessType");
-        finish();
+        userEmail = intent.getStringExtra("email");
+        userPhone = intent.getStringExtra("phoneNumber");
+        userBusiness = intent.getStringExtra("bussinessType");
 
-
+        Toast.makeText(this, userEmail + "  " + userPhone + "  " + userBusiness, Toast.LENGTH_LONG).show();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        usersDataReference = FirebaseDatabase.getInstance().getReference("Users");
+        userid = user.getUid();
         nameEditText = findViewById(R.id.nameEditText);
+
 
         citySpinner = findViewById(R.id.citySpinner);
         townSpinner = findViewById(R.id.townSpinner);
@@ -106,17 +126,32 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-
+    String location = myCity + " " + myTown + " " + myStreet;
     public void launchButton(View view) {
 
         if (myCity.equals("--Select Your District--") || myTown.equals("--Select Your Town--") || myStreet.equals("--Select Your Street--")) {
             Toast.makeText(this, "Please Fill your Location details completly", Toast.LENGTH_LONG).show();
+
         } else {
             Toast.makeText(this, myCity + " " + myTown + " " + myStreet, Toast.LENGTH_SHORT).show();
+            location = myCity + " " + myTown + " " + myStreet;
+            addUsers();
+            Intent intento = new Intent(getApplicationContext(), AdminActivity.class);
+            intento.putExtra(userName, "userName");
+            intento.putExtra(userEmail, "userEmail");
+            intento.putExtra(location, "location");
+            intento.putExtra(userBusiness, "userBusiness");
+            intento.putExtra(userPhone, "userPhone");
+            startActivity(intento);
+
         }
 
 
+    }
 
-
+    public void addUsers() {
+        userName = nameEditText.getText().toString();
+        User user = new User(userid, userEmail, userPhone, userBusiness, location, userName);
+        usersDataReference.child(userid).setValue(user);
     }
 }
