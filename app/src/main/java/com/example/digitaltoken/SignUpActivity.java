@@ -41,6 +41,10 @@ public class SignUpActivity extends AppCompatActivity {
     String userBusiness = "A";
     String userName = "A";
 
+    String counter = "b";
+    String timings = "b";
+    String notifications = "b";
+
 
 
 
@@ -66,6 +70,7 @@ public class SignUpActivity extends AppCompatActivity {
         streetSpinner = findViewById(R.id.streetSpinner);
 
         final String city[] = {"--Select Your District--", "Kozhikkode"};
+
         final String kozhikkodeCity[] = {"--Select Your Town--", "vadakara", "Nadapuram"};
         final String vadakaraTown[] = {"--Select Your Street--", "Orkkateri", "vellikulangara"};
         final String nadapuramTown[] = {"--Select Your Street--", "Edacheri", "Purameri"};
@@ -134,7 +139,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         } else {
             Toast.makeText(this, myCity + " " + myTown + " " + myStreet, Toast.LENGTH_SHORT).show();
-            location = myCity + " " + myTown + " " + myStreet;
+            location = myStreet + " " + myTown + " " + myCity;
             addUsers();
             Intent intento = new Intent(getApplicationContext(), AdminActivity.class);
             intento.putExtra(userName, "userName");
@@ -146,12 +151,14 @@ public class SignUpActivity extends AppCompatActivity {
 
         }
 
-
     }
 
     public void addUsers() {
         userName = nameEditText.getText().toString();
         User user = new User(userid, userEmail, userPhone, userBusiness, location, userName);
         usersDataReference.child(userid).setValue(user);
+
+        Messages msgs = new Messages(counter, timings, notifications);
+        usersDataReference.child(userid).child(userid).setValue(msgs);
     }
 }

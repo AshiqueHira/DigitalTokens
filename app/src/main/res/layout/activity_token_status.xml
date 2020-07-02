@@ -75,43 +75,57 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-    <TextView
-        android:id="@+id/yourTokenText"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
-        android:background="#E3F6D5"
-        android:text="Your Token"
-        android:textAlignment="center"
+    <androidx.appcompat.widget.LinearLayoutCompat
+
+        app:layout_constraintTop_toBottomOf="@id/counterTextView"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/counterTextView" />
-
-    <TextView
-        android:id="@+id/oneTimeText"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:background="#E3F6D5"
-        android:text="One Token Time"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toStartOf="@+id/estimatedText"
-        app:layout_constraintStart_toEndOf="@+id/yourTokenText"
-        app:layout_constraintTop_toBottomOf="@+id/counterTextView" />
-
-    <TextView
-        android:id="@+id/estimatedText"
-        android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="15dp"
-        android:background="#E3F6D5"
-        android:text="Estimated Time"
-        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/counterTextView" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/myLinear"
+        android:gravity="center">
+
+
+        <TextView
+            android:id="@+id/yourTokenText"
+            android:layout_width="wrap_content"
+            android:paddingHorizontal="5dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#E3F6D5"
+            android:text="Your Token"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/oneTimeText"
+            android:layout_width="wrap_content"
+            android:paddingHorizontal="5dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#E3F6D5"
+            android:text="Estimated Time"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toStartOf="@+id/estimatedText"
+            app:layout_constraintStart_toEndOf="@+id/yourTokenText" />
+
+        <TextView
+            android:id="@+id/estimatedText"
+            android:layout_width="wrap_content"
+            android:paddingHorizontal="5dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="#E3F6D5"
+            android:text="One Token Time"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
     <TextView
         android:id="@+id/textView7"
@@ -119,20 +133,22 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:text="Notifications:"
-        android:textSize="18dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="14dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/yourTokenText" />
+        app:layout_constraintTop_toBottomOf="@+id/myLinear" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:paddingRight="15dp"
         android:text="Date: 31/5/2020  Day: Sunday"
+        android:textAlignment="textEnd"
         android:textColor="#FD4747"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView7" />
+        app:layout_constraintStart_toEndOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/myLinear" />
 
     <TextView
         android:id="@+id/notesTextView"
@@ -141,7 +157,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

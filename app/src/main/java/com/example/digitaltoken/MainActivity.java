@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
     MyAdapter myAdapter;
+    EditText searchEditText;
 
 
     @Override
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         myAdapter = new MyAdapter(this, getMyList());
         mRecyclerView.setAdapter(myAdapter);
 
-        //EditText editText = findViewById(R.id.editText);
+        searchEditText = findViewById(R.id.searchEditText);
 
     }
 

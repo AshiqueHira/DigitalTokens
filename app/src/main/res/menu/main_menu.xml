@@ -4,4 +4,7 @@
     <item
         android:title="Admin"
         android:id="@+id/admin"></item>
+    <item
+        android:title="About"
+        android:id="@+id/about"></item>
 </menu>

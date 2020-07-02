@@ -22,6 +22,12 @@ import android.widget.TextView;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class AdminActivity extends AppCompatActivity {
 
@@ -42,8 +48,16 @@ public class AdminActivity extends AppCompatActivity {
     EditText notesEditText;
     EditText openEditText;
 
-    int count;
+    int count = 0;
     String value;
+
+    DatabaseReference msgDataReference;
+    FirebaseUser msg;
+
+    String counter = Integer.toString(count);
+    String timings = "b";
+    String notifications = "b";
+    String userid = "b";
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -62,9 +76,16 @@ public class AdminActivity extends AppCompatActivity {
 
         notesTextView = findViewById(R.id.notesTextView);
         counterTextView = findViewById(R.id.counterTextView);
-
-
         openTextView = findViewById(R.id.openTextView);
+
+        timings = openTextView.getText().toString();
+
+        msg = FirebaseAuth.getInstance().getCurrentUser();
+        userid = msg.getUid();
+        msgDataReference = FirebaseDatabase.getInstance().getReference("Users");
+
+
+
 
         //count = Integer.parseInt((String) counterTextView.getText());
         counterEditButton = findViewById(R.id.counterEditbutton);
@@ -102,19 +123,23 @@ public class AdminActivity extends AppCompatActivity {
 
                 counterTextView.setText(counterEditText.getText());
                 value = counterEditText.getText().toString();
-                if (TextUtils.isEmpty(value)) {
-                    count = 0;
-                } else {
-                    count = Integer.parseInt(value);
-                }
+                count = Integer.parseInt(value);
 
+                // value to be passed to firebase
+                counter = value;
+                saveDatas();
             }
         });
+
 
         dialogNotes.setButton(DialogInterface.BUTTON_POSITIVE, "Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 notesTextView.setText(notesEditText.getText());
+
+                // value to be passed to firebase
+                notifications = notesEditText.getText().toString();
+                saveDatas();
             }
 
         });
@@ -124,6 +149,10 @@ public class AdminActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 openTextView.setText(openEditText.getText());
+
+                // value to be passed to firebase
+                timings = openEditText.getText().toString();
+                saveDatas();
             }
         });
 
@@ -136,6 +165,19 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
 
+
+        msgDataReference = FirebaseDatabase.getInstance().getReference("Users");
+        msgDataReference.child(userid).child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
@@ -155,6 +197,10 @@ public class AdminActivity extends AppCompatActivity {
         count += 1;
         counterTextView.setText(Integer.toString(count));
 
+        /// value to be passed to firebase
+        counter = Integer.toString(count);
+        saveDatas();
+
     }
 
     public void minusOne(View view) {
@@ -162,6 +208,17 @@ public class AdminActivity extends AppCompatActivity {
         count -= 1;
         counterTextView.setText(Integer.toString(count));
 
+        /// value to be passed to firebase
+        counter = Integer.toString(count);
+        saveDatas();
+    }
+
+
+    public void saveDatas() {
+
+        msgDataReference.child(userid).child(userid).child("counter").setValue(counter);
+        msgDataReference.child(userid).child(userid).child("notifications").setValue(notifications);
+        msgDataReference.child(userid).child(userid).child("timings").setValue(timings);
     }
 
 
@@ -174,9 +231,13 @@ public class AdminActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signOut();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             return true;
+        } else if (item.getItemId() == R.id.profile) {
+            Intent profileIntent = new Intent(getApplicationContext(), ProfileActivity.class);
+            startActivity(profileIntent);
         }
         return false;
     }
+
 
 }
 
