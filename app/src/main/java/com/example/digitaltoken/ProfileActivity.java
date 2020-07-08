@@ -50,6 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
         userLocationET = findViewById(R.id.userLocationEditText);
         userEmailET = findViewById(R.id.userEmailEditText);
         userPhoneET = findViewById(R.id.userPhoneEditText);
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         userId = user.getUid();
 

@@ -32,6 +32,7 @@ public class SignUpActivity extends AppCompatActivity {
     boolean errorToast = true;
 
     DatabaseReference usersDataReference;
+    DatabaseReference msgDataReference;
     FirebaseUser user;
 
     //////////////////////// initialise strings and stuffs
@@ -61,6 +62,7 @@ public class SignUpActivity extends AppCompatActivity {
         Toast.makeText(this, userEmail + "  " + userPhone + "  " + userBusiness, Toast.LENGTH_LONG).show();
         user = FirebaseAuth.getInstance().getCurrentUser();
         usersDataReference = FirebaseDatabase.getInstance().getReference("Users");
+        msgDataReference = FirebaseDatabase.getInstance().getReference("Messages");
         userid = user.getUid();
         nameEditText = findViewById(R.id.nameEditText);
 
@@ -158,7 +160,7 @@ public class SignUpActivity extends AppCompatActivity {
         User user = new User(userid, userEmail, userPhone, userBusiness, location, userName);
         usersDataReference.child(userid).setValue(user);
 
-        Messages msgs = new Messages(counter, timings, notifications);
-        usersDataReference.child(userid).child(userid).setValue(msgs);
+        Message message = new Message(userid, timings, counter, notifications);
+        msgDataReference.child(userid).setValue(message);
     }
 }

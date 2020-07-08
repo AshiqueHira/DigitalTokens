@@ -10,7 +10,7 @@
     <include layout="@layout/myappbar" />
 
     <TextView
-        android:id="@+id/openTextView"
+        android:id="@+id/timingTV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="17dp"
@@ -25,7 +25,7 @@
         app:layout_constraintTop_toBottomOf="@+id/switch1" />
 
     <TextView
-        android:id="@+id/counterTextView"
+        android:id="@+id/counterTV"
         android:layout_width="0dp"
         android:layout_height="150dp"
         android:layout_marginTop="16dp"
@@ -39,7 +39,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/openTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/timingTV" />
 
     <TextView
         android:id="@+id/textView7"
@@ -50,7 +50,7 @@
         android:text="Notifications:"
         android:textSize="18dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/counterTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/counterTV" />
 
     <TextView
         android:id="@+id/textView8"
@@ -62,10 +62,10 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView7"
-        app:layout_constraintTop_toBottomOf="@+id/counterTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/counterTV" />
 
     <TextView
-        android:id="@+id/notesTextView"
+        android:id="@+id/notesTV"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#61FFFFFF"
@@ -114,9 +114,9 @@
         android:onClick="plusOne"
         android:text="+"
         android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@+id/counterTextView"
+        app:layout_constraintBottom_toBottomOf="@+id/counterTV"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/counterTextView" />
+        app:layout_constraintTop_toTopOf="@+id/counterTV" />
 
     <Button
         android:id="@+id/minusOne"
@@ -129,9 +129,9 @@
         android:onClick="minusOne"
         android:text="-"
         android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@+id/counterTextView"
+        app:layout_constraintBottom_toBottomOf="@+id/counterTV"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/counterTextView" />
+        app:layout_constraintTop_toTopOf="@+id/counterTV" />
 
     <TextView
         android:id="@+id/textView"
@@ -141,9 +141,9 @@
         android:text="TOKEN NUMBER"
         android:textAlignment="center"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/counterTextView"
-        app:layout_constraintStart_toStartOf="@+id/counterTextView"
-        app:layout_constraintTop_toTopOf="@+id/counterTextView" />
+        app:layout_constraintEnd_toEndOf="@+id/counterTV"
+        app:layout_constraintStart_toStartOf="@+id/counterTV"
+        app:layout_constraintTop_toTopOf="@+id/counterTV" />
 
     <Button
         android:id="@+id/counterEditbutton"
@@ -156,9 +156,9 @@
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="@+id/counterTextView"
-        app:layout_constraintEnd_toEndOf="@+id/counterTextView"
-        app:layout_constraintStart_toStartOf="@+id/counterTextView" />
+        app:layout_constraintBottom_toBottomOf="@+id/counterTV"
+        app:layout_constraintEnd_toEndOf="@+id/counterTV"
+        app:layout_constraintStart_toStartOf="@+id/counterTV" />
 
     <Button
         android:id="@+id/notesEditbutton"
@@ -172,6 +172,6 @@
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/notesTextView"
-        app:layout_constraintTop_toTopOf="@+id/notesTextView" />
+        app:layout_constraintEnd_toEndOf="@+id/notesTV"
+        app:layout_constraintTop_toTopOf="@+id/notesTV" />
 </androidx.constraintlayout.widget.ConstraintLayout>

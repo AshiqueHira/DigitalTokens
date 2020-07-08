@@ -5,13 +5,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,7 +18,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -74,17 +71,36 @@ public class AdminActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.myActionBar);
         setSupportActionBar(toolbar);
 
-        notesTextView = findViewById(R.id.notesTextView);
-        counterTextView = findViewById(R.id.counterTextView);
-        openTextView = findViewById(R.id.openTextView);
+        notesTextView = findViewById(R.id.notesTV);
+        counterTextView = findViewById(R.id.counterTV);
+        openTextView = findViewById(R.id.timingTV);
 
         timings = openTextView.getText().toString();
 
         msg = FirebaseAuth.getInstance().getCurrentUser();
         userid = msg.getUid();
-        msgDataReference = FirebaseDatabase.getInstance().getReference("Users");
+        msgDataReference = FirebaseDatabase.getInstance().getReference("Messages");
 
+        msgDataReference.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                value = dataSnapshot.getValue(Message.class).getmCount();
+                count = Integer.parseInt(value);
+                counterTextView.setText(value);
 
+                timings = dataSnapshot.getValue(Message.class).getmTime();
+                openTextView.setText(timings);
+
+                notifications = dataSnapshot.getValue(Message.class).getmNotificaton();
+                notesTextView.setText(notifications);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
 
         //count = Integer.parseInt((String) counterTextView.getText());
@@ -127,7 +143,7 @@ public class AdminActivity extends AppCompatActivity {
 
                 // value to be passed to firebase
                 counter = value;
-                saveDatas();
+                updateDatas();
             }
         });
 
@@ -135,11 +151,12 @@ public class AdminActivity extends AppCompatActivity {
         dialogNotes.setButton(DialogInterface.BUTTON_POSITIVE, "Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                notesTextView.setText(notesEditText.getText());
+                notifications = notesEditText.getText().toString();
+                notesTextView.setText(notifications);
 
                 // value to be passed to firebase
-                notifications = notesEditText.getText().toString();
-                saveDatas();
+
+                updateDatas();
             }
 
         });
@@ -148,11 +165,11 @@ public class AdminActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                openTextView.setText(openEditText.getText());
+                timings = openEditText.getText().toString();
+                openTextView.setText(timings);
 
                 // value to be passed to firebase
-                timings = openEditText.getText().toString();
-                saveDatas();
+                updateDatas();
             }
         });
 
@@ -165,19 +182,6 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
 
-
-        msgDataReference = FirebaseDatabase.getInstance().getReference("Users");
-        msgDataReference.child(userid).child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
     }
 
@@ -199,7 +203,7 @@ public class AdminActivity extends AppCompatActivity {
 
         /// value to be passed to firebase
         counter = Integer.toString(count);
-        saveDatas();
+        updateDatas();
 
     }
 
@@ -210,15 +214,15 @@ public class AdminActivity extends AppCompatActivity {
 
         /// value to be passed to firebase
         counter = Integer.toString(count);
-        saveDatas();
+        updateDatas();
     }
 
 
-    public void saveDatas() {
+    public void updateDatas() {
 
-        msgDataReference.child(userid).child(userid).child("counter").setValue(counter);
-        msgDataReference.child(userid).child(userid).child("notifications").setValue(notifications);
-        msgDataReference.child(userid).child(userid).child("timings").setValue(timings);
+        msgDataReference.child(userid).child("mCount").setValue(counter);
+        msgDataReference.child(userid).child("mNotificaton").setValue(notifications);
+        msgDataReference.child(userid).child("mTime").setValue(timings);
     }
 
 
