@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
     String name = "a";
     String location = "b";
     String userId = "c";
+    String userBusiness = "default";
+    String userImage = "noimage";
 
     List<String> list = new ArrayList<>();
 
@@ -86,8 +88,24 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
                 location = dataSnapshot.getValue(User.class).getUserLocation();
                 userId = dataSnapshot.getValue(User.class).getUsersId();
 
+                // setting up image in recyclerview
+                userBusiness = dataSnapshot.getValue(User.class).getUserBusiness();
+                if (userBusiness.equals("Doctor(Self Service)")) {
+                    userImage = "doctor";
+                } else if (userBusiness.equals("Ration Shop")) {
+                    userImage = "ration";
+                } else if (userBusiness.equals("Sales Shop")) {
+                    userImage = "sales";
+                } else if (userBusiness.equals("Flour Mill")) {
+                    userImage = "flour";
+                } else if (userBusiness.equals("Govt. Hospital")) {
+                    userImage = "govermenthospital";
+                } else if (userBusiness.equals("Bank")) {
+                    userImage = "bank";
+                }
+
                 Toast.makeText(MainActivity.this, name + " " + location + " " + userId, Toast.LENGTH_LONG).show();
-                insertDatas(name, location, userId);
+                insertDatas(name, location, userId, userImage);
                 myRecyclerAdapter.notifyDataSetChanged();
             }
 
@@ -115,13 +133,14 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
 
     }
 
-    public void insertDatas(String myname, String mylocation, String usersId) {
+    public void insertDatas(String myname, String mylocation, String usersId, String imagefile) {
 
 
         MyModel m = new MyModel();
         m.setMyTitle(myname);
         m.setMyDisc(mylocation);
-        m.setMyImg(R.drawable.homedr);
+        m.setMyImg(getResources().getIdentifier(imagefile, "drawable", getPackageName()));
+        //m.setMyImg(R.drawable.homedr);
         m.setMyuid(usersId);
 
         models.add(m);

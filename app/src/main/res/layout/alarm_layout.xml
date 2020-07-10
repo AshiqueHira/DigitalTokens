@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linearAlarm"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/titles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Set Alarm"
+        android:textAlignment="textStart"
+        android:textColor="#000000"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:paddingHorizontal="10sp"
+        android:text="How many tokens before you want to ring the alarm"
+        android:textAlignment="textStart"
+        android:textColor="#454C4B"
+        android:textSize="15sp"
+        android:textStyle="normal" />
+
+    <EditText
+        android:id="@+id/tokensEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:hint="Enter number of tokens"
+        android:inputType="number"
+        android:paddingHorizontal="10sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:paddingHorizontal="10sp"
+        android:text="Note : If your entered number of tokens is '10' then you\nwill notified by an alarm before 10 token than yours"
+        android:textColor="#5C5353"
+        android:textStyle="italic" />
+
+
+</LinearLayout>

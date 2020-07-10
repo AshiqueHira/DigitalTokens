@@ -42,7 +42,7 @@ public class SignUpActivity extends AppCompatActivity {
     String userBusiness = "A";
     String userName = "A";
 
-    String counter = "b";
+    String counter = "0";
     String timings = "b";
     String notifications = "b";
 

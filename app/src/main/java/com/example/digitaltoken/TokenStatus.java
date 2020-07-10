@@ -2,19 +2,27 @@ package com.example.digitaltoken;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class TokenStatus extends AppCompatActivity {
 
@@ -27,9 +35,12 @@ public class TokenStatus extends AppCompatActivity {
     String count = "0";
     String timing = "OPEN : 8:00 AM and CLOSE : 5:00 PM";
     String notifications = "No Notificatons yet";
-    String userid = "A";
+    String userid = "GOMe2uXrxHWnoztbrm243SZYpXM2";
+    String alarmToken = "0";
+    int alarmtoken = 0;
 
     DatabaseReference userDatabaseReference;
+    DatabaseReference childDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,41 +61,20 @@ public class TokenStatus extends AppCompatActivity {
         timingTV = findViewById(R.id.timingTV);
         notificationTV = findViewById(R.id.notesTV);
 
+        Toast.makeText(this, userid, Toast.LENGTH_SHORT).show();
+
         userDatabaseReference = FirebaseDatabase.getInstance().getReference("Messages");
+
         if (!userid.equals("A")) {
-            userDatabaseReference.orderByChild(userid).addChildEventListener(new ChildEventListener() {
+            userDatabaseReference.child(userid).addValueEventListener(new ValueEventListener() {
                 @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     count = dataSnapshot.getValue(Message.class).getmCount();
                     timing = dataSnapshot.getValue(Message.class).getmTime();
                     notifications = dataSnapshot.getValue(Message.class).getmNotificaton();
-
                     counterTV.setText(count);
                     timingTV.setText(timing);
                     notificationTV.setText(notifications);
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    count = dataSnapshot.getValue(Message.class).getmCount();
-                    timing = dataSnapshot.getValue(Message.class).getmTime();
-                    notifications = dataSnapshot.getValue(Message.class).getmNotificaton();
-
-                    counterTV.setText(count);
-                    timingTV.setText(timing);
-                    notificationTV.setText(notifications);
-
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
                 }
 
                 @Override
@@ -92,8 +82,28 @@ public class TokenStatus extends AppCompatActivity {
 
                 }
             });
+
         }
     }
+
+
+    public void alarmDialog(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        final View dialogLayout = inflater.inflate(R.layout.alarm_layout, null);
+        final EditText alarmEditText = findViewById(R.id.tokensEditText);
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                alarmToken = alarmEditText.getText().toString();
+
+            }
+        });
+        builder.setNegativeButton("cancel", null);
+        builder.setView(dialogLayout);
+        builder.show();
+    }
+
 
 
 }
