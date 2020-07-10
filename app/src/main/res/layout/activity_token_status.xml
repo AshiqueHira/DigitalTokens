@@ -7,6 +7,7 @@
     tools:context=".TokenStatus">
 
     <include
+        android:id="@+id/include"
         layout="@layout/myappbar" />
 
     <TextView
@@ -24,42 +25,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editText2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="Enter Your Token Number"
-        android:inputType="number"
-        app:layout_constraintEnd_toStartOf="@+id/button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timingTV" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="5dp"
-        android:onClick="alarmDialog"
-        android:text="CLICK"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timingTV" />
-
     <TextView
         android:id="@+id/textView3"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="#DFFADEDE"
+        android:paddingTop="10dp"
         android:text="TOKEN NUMBER"
         android:textAlignment="center"
         android:textColor="#0C0C0C"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@+id/timingTV" />
 
     <TextView
         android:id="@+id/counterTV"
@@ -125,6 +103,7 @@
             android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="parent" />
 
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
@@ -159,6 +138,57 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+    <TextView
+        android:id="@+id/myToken"
+        android:layout_width="63dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="7dp"
+        android:text="100"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@id/myLinear"
+        app:layout_constraintStart_toStartOf="@id/myLinear"
+        app:layout_constraintTop_toTopOf="@id/myLinear" />
+
+    <TextView
+        android:id="@+id/myEstimate"
+        android:layout_width="91dp"
+        android:layout_height="41dp"
+        android:layout_marginStart="142dp"
+        android:layout_marginTop="7dp"
+        android:text="100 hh"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@id/myLinear"
+        app:layout_constraintStart_toStartOf="@+id/myLinear"
+        app:layout_constraintTop_toTopOf="@id/myLinear" />
+
+    <TextView
+        android:id="@+id/myOneToken"
+        android:layout_width="100dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="51dp"
+        android:text="38 min"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@id/myLinear"
+        app:layout_constraintEnd_toEndOf="@+id/myLinear"
+        app:layout_constraintTop_toTopOf="@id/myLinear" />
+
+    <TextView
+        android:layout_width="25dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="55dp"
+        android:text="edit"
+        android:textColor="#589FF6"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/myLinear"
+        app:layout_constraintStart_toStartOf="@id/myLinear"
+        app:layout_constraintTop_toTopOf="@id/myLinear" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
