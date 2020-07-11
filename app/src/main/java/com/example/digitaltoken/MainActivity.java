@@ -192,11 +192,11 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
     }
 
 
-    public boolean onCreateOptionMenu(Menu menu) {
+    /*public boolean onCreateOptionMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

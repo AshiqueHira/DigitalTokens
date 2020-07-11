@@ -3,8 +3,8 @@
 
     <item
         android:title="Admin"
-        android:id="@+id/admin"></item>
+        android:id="@+id/admin" />
     <item
         android:title="About"
-        android:id="@+id/about"></item>
+        android:id="@+id/about" />
 </menu>

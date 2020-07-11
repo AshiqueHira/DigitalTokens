@@ -8,10 +8,15 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -42,7 +47,16 @@ public class TokenStatus extends AppCompatActivity {
     String heading = " ";
 
     DatabaseReference userDatabaseReference;
-    DatabaseReference childDatabaseReference;
+
+    MediaPlayer audioPlayer = MediaPlayer.create(this, R.raw.alarm);
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.token_status_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +105,7 @@ public class TokenStatus extends AppCompatActivity {
     }
 
 
-    public void alarmDialog(View view) {
+    public void alarmDialog() {
         AlertDialog.Builder alarmBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogLayout = inflater.inflate(R.layout.alarm_layout, null);
@@ -111,9 +125,10 @@ public class TokenStatus extends AppCompatActivity {
     public void tokenClick(View view) {
 
         AlertDialog.Builder tokenBuilder = new AlertDialog.Builder(this);
-        tokenBuilder.setTitle("With Edit Text");
+        tokenBuilder.setTitle("Enter your Token Number");
 
         final EditText input = new EditText(TokenStatus.this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT);
@@ -128,6 +143,18 @@ public class TokenStatus extends AppCompatActivity {
         tokenBuilder.setNegativeButton("Cancel", null);
         tokenBuilder.show();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        if (item.getItemId() == R.id.setAlarm) {
+
+            alarmDialog();
+            return true;
+        }
+        return false;
     }
 
 
