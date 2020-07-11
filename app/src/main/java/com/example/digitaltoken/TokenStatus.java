@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class TokenStatus extends AppCompatActivity {
     String userid = "GOMe2uXrxHWnoztbrm243SZYpXM2";
     String alarmToken = "0";
     int alarmtoken = 0;
+    String heading = " ";
 
     DatabaseReference userDatabaseReference;
     DatabaseReference childDatabaseReference;
@@ -51,11 +53,13 @@ public class TokenStatus extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
-        String heading = intent.getStringExtra("name");
-        getSupportActionBar().setTitle(heading);
+        heading = intent.getStringExtra("name");
+
+        //getSupportActionBar().setTitle(heading);
         String description = intent.getStringExtra("location");
-        getSupportActionBar().setSubtitle(description);
+        //getSupportActionBar().setSubtitle(description);
         userid = intent.getStringExtra("userId");
+
 
         counterTV = findViewById(R.id.counterTV);
         timingTV = findViewById(R.id.timingTV);
@@ -88,20 +92,42 @@ public class TokenStatus extends AppCompatActivity {
 
 
     public void alarmDialog(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder alarmBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         final View dialogLayout = inflater.inflate(R.layout.alarm_layout, null);
         final EditText alarmEditText = findViewById(R.id.tokensEditText);
-        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+        alarmBuilder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 alarmToken = alarmEditText.getText().toString();
 
             }
         });
-        builder.setNegativeButton("cancel", null);
-        builder.setView(dialogLayout);
-        builder.show();
+        alarmBuilder.setNegativeButton("cancel", null);
+        alarmBuilder.setView(dialogLayout);
+        alarmBuilder.show();
+    }
+
+    public void tokenClick(View view) {
+
+        AlertDialog.Builder tokenBuilder = new AlertDialog.Builder(this);
+        tokenBuilder.setTitle("With Edit Text");
+
+        final EditText input = new EditText(TokenStatus.this);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        tokenBuilder.setView(input);
+        tokenBuilder.setPositiveButton("Set", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(getApplicationContext(), "Text entered is " + input.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        tokenBuilder.setNegativeButton("Cancel", null);
+        tokenBuilder.show();
+
     }
 
 
