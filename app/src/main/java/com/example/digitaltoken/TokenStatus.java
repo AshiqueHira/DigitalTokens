@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
+import android.os.SystemClock;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,6 +32,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.lang.reflect.Array;
 
 public class TokenStatus extends AppCompatActivity {
 
@@ -52,6 +57,12 @@ public class TokenStatus extends AppCompatActivity {
 
     DatabaseReference userDatabaseReference;
     MediaPlayer audioPlayer;
+
+    Chronometer chronometer;
+    private boolean isRunning;
+    boolean start;
+    boolean stop;
+
 
 
 
@@ -86,6 +97,7 @@ public class TokenStatus extends AppCompatActivity {
         yourTokenTV = findViewById(R.id.myTokenTV);
 
         audioPlayer = MediaPlayer.create(this, R.raw.alarm);
+        chronometer = new Chronometer(this);
 
         Toast.makeText(this, userid, Toast.LENGTH_SHORT).show();
 
@@ -104,6 +116,8 @@ public class TokenStatus extends AppCompatActivity {
                     timingTV.setText(timing);
                     notificationTV.setText(notifications);
                     ringAlarm();
+
+                    Log.e(" the calling data is", "is one time i think but probobly not the metnitoe");
                 }
 
                 @Override
@@ -117,54 +131,39 @@ public class TokenStatus extends AppCompatActivity {
 
 
     public void alarmDialog() {
-        AlertDialog.Builder alarmBuilder = new AlertDialog.Builder(this);
+
         LayoutInflater inflater = getLayoutInflater();
         LayoutInflater inflaters = getLayoutInflater();
         final View dialogLayout = inflater.inflate(R.layout.alarm_layout, null);
         final EditText alarmEditText = dialogLayout.findViewById(R.id.tokensEditText);
-        alarmBuilder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+        final AlertDialog alarmBuilder = new AlertDialog.Builder(this)
+                .setView(dialogLayout)
+                .setPositiveButton("Set", null)
+                .setNegativeButton("cancel", null)
+                .create();
+        alarmBuilder.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                alarmToken = alarmEditText.getText().toString();
-                alarmIntToken = Integer.parseInt(alarmToken);
-                //Toast.makeText(TokenStatus.this, alarmIntToken, Toast.LENGTH_SHORT).show();
+            public void onShow(DialogInterface dialog) {
+                Button button = ((AlertDialog) alarmBuilder).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
 
+                    @Override
+                    public void onClick(View view) {
+                        // TODO Do something
+                        alarmToken = alarmEditText.getText().toString();
+                        alarmIntToken = Integer.parseInt(alarmToken);
+                        if (myIntToken - countInt >= alarmIntToken) {
+                            alarmEditText.setError("Invalid Enter ! Please enter lesser number");
+                        } else {
+                            alarmBuilder.dismiss();
+                        }
+                    }
+                });
             }
         });
-        alarmBuilder.setNegativeButton("cancel", null);
-        alarmBuilder.setView(dialogLayout);
         alarmBuilder.show();
     }
 
-    public void yourTokenClick(View view) {
-
-        AlertDialog.Builder tokenBuilder = new AlertDialog.Builder(this);
-        tokenBuilder.setTitle("Enter your Token Number");
-
-        final EditText input = new EditText(TokenStatus.this);
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
-        tokenBuilder.setView(input);
-        tokenBuilder.setPositiveButton("Set", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                myToken = input.getText().toString();
-                myIntToken = Integer.parseInt(myToken);
-                if (myIntToken <= countInt) {
-                    input.setError("Your token must be greater than the current token number");
-                    return;
-                }
-                //Toast.makeText(getApplicationContext(), "Text entered is " + input.getText().toString(), Toast.LENGTH_SHORT).show();
-
-            }
-        });
-        tokenBuilder.setNegativeButton("Cancel", null);
-        tokenBuilder.show();
-
-    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -189,6 +188,51 @@ public class TokenStatus extends AppCompatActivity {
             audioPlayer.start();
         }
     }
+
+    public void yourTokenClick(View view) {
+
+        final EditText input = new EditText(TokenStatus.this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(input)
+                .setTitle("Enter your Token Number")
+                .setPositiveButton("Set", null) //Set to null. We override the onclick
+                .setNegativeButton("Cancel", null)
+                .create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+
+                Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        myToken = input.getText().toString();
+                        myIntToken = Integer.parseInt(myToken);
+                        if (myIntToken <= countInt) {
+                            input.setError("Your token must be greater than the current token number");
+
+                        } else {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+            }
+        });
+        dialog.show();
+    }
+
+
+
+
+
 
 
 
