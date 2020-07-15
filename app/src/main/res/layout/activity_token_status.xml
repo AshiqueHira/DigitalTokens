@@ -128,7 +128,7 @@
             app:layout_constraintTop_toTopOf="@id/yourTokenText" />
 
         <TextView
-            android:id="@+id/myEstimate"
+            android:id="@+id/estimatedTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -144,7 +144,7 @@
             app:layout_constraintTop_toTopOf="@id/estiTimeText" />
 
         <TextView
-            android:id="@+id/myOneToken"
+            android:id="@+id/oneTokenTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -206,8 +206,13 @@
         android:id="@+id/notesTV"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/notes"
-        android:paddingLeft="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+
+        android:layout_marginBottom="10dp"
+        android:background="@color/common_google_signin_btn_text_dark_default"
+        android:paddingStart="15dp"
         android:paddingTop="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

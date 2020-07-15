@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -34,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class TokenStatus extends AppCompatActivity {
 
@@ -42,6 +44,8 @@ public class TokenStatus extends AppCompatActivity {
     TextView notificationTV;
     TextView counterTV;
     TextView yourTokenTV;
+    TextView oneTokenTV;
+    TextView estimatedTv;
 
     // String initialisation
     String count = "0";
@@ -58,10 +62,17 @@ public class TokenStatus extends AppCompatActivity {
     DatabaseReference userDatabaseReference;
     MediaPlayer audioPlayer;
 
-    Chronometer chronometer;
-    private boolean isRunning;
-    boolean start;
-    boolean stop;
+
+    private Chronometer chronometer;
+    private boolean isRunning = false;
+    boolean callingTwice = false;
+
+    ArrayList<Integer> times = new ArrayList<Integer>();
+    String sDuration;
+    int iDuration;
+    int rcounter;
+    int sum = 0;
+    int refenceCount = 1;
 
 
 
@@ -96,6 +107,9 @@ public class TokenStatus extends AppCompatActivity {
         notificationTV = findViewById(R.id.notesTV);
         yourTokenTV = findViewById(R.id.myTokenTV);
 
+        estimatedTv = findViewById(R.id.estimatedTV);
+        oneTokenTV = findViewById(R.id.oneTokenTv);
+
         audioPlayer = MediaPlayer.create(this, R.raw.alarm);
         chronometer = new Chronometer(this);
 
@@ -117,7 +131,19 @@ public class TokenStatus extends AppCompatActivity {
                     notificationTV.setText(notifications);
                     ringAlarm();
 
-                    Log.e(" the calling data is", "is one time i think but probobly not the metnitoe");
+                    if (countInt == refenceCount && !callingTwice) {
+                        start();
+                        refenceCount += 1;
+                        callingTwice = true;
+                    } else if (countInt == refenceCount && callingTwice) {
+                        start();
+                        refenceCount += 1;
+                        callingTwice = true;
+                        start();
+                    }
+
+
+
                 }
 
                 @Override
@@ -230,6 +256,73 @@ public class TokenStatus extends AppCompatActivity {
     }
 
 
+////////////////////////// time calculations
+
+    public void start() {
+
+        if (!isRunning) {
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+            isRunning = true;
+
+        } else {
+
+            isRunning = false;
+            chronometer.stop();
+            int elapsedMillis = (int) (SystemClock.elapsedRealtime() - chronometer.getBase());
+            iDuration = elapsedMillis / 1000;
+            sDuration = String.valueOf(iDuration);
+            times.add(iDuration);
+            rcounter += 1;
+
+        }
+        if (rcounter > 6) {
+            int j = rcounter - 7;
+            sum = 0;
+            int avg = 0;
+            for (int i = rcounter - 1; (i + 1) > j; i--) {
+                sum += times.get(i);
+                Log.e("the sum is ", String.valueOf(sum));
+            }
+
+            seconds(sum);
+            avg = sum / 7;
+            oneTokenTV.setText(String.valueOf(avg));
+
+            Log.e("the counter is", String.valueOf(rcounter));
+        }
+
+    }
+
+    public void seconds(int second) {
+        int checkSecond = second / 60;
+        if (checkSecond == 0) {
+            estimatedTv.setText(String.valueOf(second) + " sec");
+        } else {
+            minutes(second);
+        }
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void minutes(int passedSec) {
+        int minute = passedSec / 60;
+        if (minute >= 60) {
+            hours(minute);
+        } else {
+            estimatedTv.setText(String.valueOf(minute) + " min");
+        }
+
+    }
+
+    public void hours(int passedMin) {
+        int hour = passedMin / 60;
+        int remMin = passedMin % 60;
+        String sHour = String.valueOf(hour);
+        String sRemMin = String.valueOf(remMin);
+        estimatedTv.setText(sHour + " hr " + sRemMin + " min");
+
+    }
 
 
 
