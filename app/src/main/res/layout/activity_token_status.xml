@@ -81,11 +81,11 @@
 
         <TextView
             android:id="@+id/estiTimeText"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="80dp"
             android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
             android:layout_marginBottom="10dp"
             android:background="#E3F6D5"
             android:paddingHorizontal="5dp"
@@ -135,7 +135,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
-            android:text="1.38 hr"
+            android:text="....."
             android:textAlignment="center"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="@id/estiTimeText"
@@ -147,16 +147,16 @@
             android:id="@+id/oneTokenTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
-            android:text="38 min"
+            android:text="....."
             android:textAlignment="center"
             android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="@id/oneTokenText"
             app:layout_constraintEnd_toEndOf="@+id/oneTokenText"
-            app:layout_constraintTop_toTopOf="@id/oneTokenText"
-            app:layout_constraintStart_toStartOf="@id/oneTokenText" />
+            app:layout_constraintStart_toStartOf="@id/oneTokenText"
+            app:layout_constraintTop_toTopOf="@id/oneTokenText" />
 
         <TextView
             android:id="@+id/editButtonText"

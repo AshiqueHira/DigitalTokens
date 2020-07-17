@@ -42,7 +42,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="15dp"
-        android:background="#FFFFFF"
+        android:background="@drawable/curved_corner"
         android:ems="10"
         android:hint="Name(eg: X Bank, Dr. X MBBS,MD)"
         android:inputType="textPersonName"
@@ -80,7 +80,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
-        android:background="#FFFFFF"
+        android:background="@drawable/curved_corner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameEditText" />
@@ -92,7 +92,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
-        android:background="#FFFFFF"
+        android:background="@drawable/curved_corner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/citySpinner" />
@@ -104,7 +104,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="15dp"
-        android:background="#FFFFFF"
+        android:background="@drawable/curved_corner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/townSpinner" />

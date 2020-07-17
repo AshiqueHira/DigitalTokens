@@ -1,11 +1,14 @@
 package com.example.digitaltoken;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,6 +29,8 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
 
     ProgressBar progressBar;
+
+    String inputEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,9 +97,56 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void forgotClick(View view) {
+
+        LayoutInflater inflater = getLayoutInflater();
+        LayoutInflater inflaters = getLayoutInflater();
+
+        final View dialogLayout = inflater.inflate(R.layout.forgot_dialog, null);
+        final EditText forgotEditText = dialogLayout.findViewById(R.id.forgotEmail);
+        final AlertDialog forgotBuilder = new AlertDialog.Builder(this)
+                .setView(dialogLayout)
+                .setPositiveButton("Send", null)
+                .setNegativeButton("cancel", null)
+                .create();
+        forgotBuilder.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button button = ((AlertDialog) forgotBuilder).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        inputEmail = forgotEditText.getText().toString();
+
+                        if (TextUtils.isEmpty(inputEmail)) {
+                            forgotEditText.setError("Please Enter Your Email");
+                        } else {
+
+                            firebaseAuth.sendPasswordResetEmail(inputEmail)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Toast.makeText(LoginActivity.this,
+                                                        "The Reset link has send to your email provided",
+                                                        Toast.LENGTH_SHORT).show();
+                                                forgotBuilder.dismiss();
+                                            } else {
+                                                Toast.makeText(LoginActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
 
 
+                        }
+                    }
+                });
+            }
+        });
+        forgotBuilder.show();
 
+    }
 
 
 }

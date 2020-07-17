@@ -6,16 +6,14 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:largeHeap="true"
-        android:hardwareAccelerated="false"
         android:theme="@style/AppTheme">
-        <activity android:name=".ProfileActivity">
-
-        </activity>
+        <activity android:name=".ProfileActivity"></activity>
         <activity android:name=".TypeActivity" />
         <activity
             android:name=".AdminActivity"
@@ -32,6 +30,10 @@
         <activity
             android:name=".TokenStatus"
             android:parentActivityName=".MainActivity" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

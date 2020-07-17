@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/forgotDialog"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset Password ?"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:paddingHorizontal="20dp"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter Your Email to receive the Reset Link"
+        android:textSize="20sp"
+        android:paddingHorizontal="15dp"
+        android:textAlignment="textStart"
+        android:layout_marginTop="20dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter the email"
+        android:inputType="textEmailAddress"
+        android:paddingHorizontal="15dp"
+        android:layout_marginTop="15dp"
+        android:id="@+id/forgotEmail" />
+
+
+</androidx.appcompat.widget.LinearLayoutCompat>

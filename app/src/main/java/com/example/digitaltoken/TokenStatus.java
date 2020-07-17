@@ -66,6 +66,7 @@ public class TokenStatus extends AppCompatActivity {
     private Chronometer chronometer;
     private boolean isRunning = false;
     boolean callingTwice = false;
+    boolean referenceNumBol = false;
 
     ArrayList<Integer> times = new ArrayList<Integer>();
     String sDuration;
@@ -131,15 +132,23 @@ public class TokenStatus extends AppCompatActivity {
                     notificationTV.setText(notifications);
                     ringAlarm();
 
-                    if (countInt == refenceCount && !callingTwice) {
-                        start();
-                        refenceCount += 1;
-                        callingTwice = true;
-                    } else if (countInt == refenceCount && callingTwice) {
-                        start();
-                        refenceCount += 1;
-                        callingTwice = true;
-                        start();
+                    if (!referenceNumBol) {
+                        refenceCount = countInt + 1;
+                        referenceNumBol = true;
+                    }
+
+                    if (myIntToken > 7) {
+
+                        if (countInt == refenceCount && !callingTwice) {
+                            start();
+                            refenceCount += 1;
+                            callingTwice = true;
+                        } else if (countInt == refenceCount && callingTwice) {
+                            start();
+                            refenceCount += 1;
+                            callingTwice = true;
+                            start();
+                        }
                     }
 
 
@@ -175,10 +184,9 @@ public class TokenStatus extends AppCompatActivity {
 
                     @Override
                     public void onClick(View view) {
-                        // TODO Do something
                         alarmToken = alarmEditText.getText().toString();
                         alarmIntToken = Integer.parseInt(alarmToken);
-                        if (myIntToken - countInt >= alarmIntToken) {
+                        if (myIntToken - countInt <= alarmIntToken) {
                             alarmEditText.setError("Invalid Enter ! Please enter lesser number");
                         } else {
                             alarmBuilder.dismiss();
@@ -240,12 +248,17 @@ public class TokenStatus extends AppCompatActivity {
 
                     @Override
                     public void onClick(View view) {
+
                         myToken = input.getText().toString();
                         myIntToken = Integer.parseInt(myToken);
                         if (myIntToken <= countInt) {
                             input.setError("Your token must be greater than the current token number");
 
+
                         } else {
+                            myToken = input.getText().toString();
+                            myIntToken = Integer.parseInt(myToken);
+                            yourTokenTV.setText(myToken);
                             dialog.dismiss();
                         }
                     }
@@ -285,15 +298,22 @@ public class TokenStatus extends AppCompatActivity {
                 Log.e("the sum is ", String.valueOf(sum));
             }
 
-            seconds(sum);
+
             avg = sum / 7;
-            oneTokenTV.setText(String.valueOf(avg));
+            if (myIntToken != countInt) {
+                seconds(avg * myIntToken);
+            } else if (myIntToken == countInt) {
+                estimatedTv.setText("0");
+            }
+            aseconds(avg);
+
 
             Log.e("the counter is", String.valueOf(rcounter));
         }
 
     }
 
+    @SuppressLint("SetTextI18n")
     public void seconds(int second) {
         int checkSecond = second / 60;
         if (checkSecond == 0) {
@@ -315,12 +335,48 @@ public class TokenStatus extends AppCompatActivity {
 
     }
 
+    @SuppressLint("SetTextI18n")
     public void hours(int passedMin) {
         int hour = passedMin / 60;
         int remMin = passedMin % 60;
         String sHour = String.valueOf(hour);
         String sRemMin = String.valueOf(remMin);
         estimatedTv.setText(sHour + " hr " + sRemMin + " min");
+
+    }
+
+
+    /////////////////
+
+    @SuppressLint("SetTextI18n")
+    public void aseconds(int asecond) {
+        int acheckSecond = asecond / 60;
+        if (acheckSecond == 0) {
+            oneTokenTV.setText(String.valueOf(asecond) + " sec");
+        } else {
+            aminutes(asecond);
+        }
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void aminutes(int apassedSec) {
+        int aminute = apassedSec / 60;
+        if (aminute >= 60) {
+            ahours(aminute);
+        } else {
+            oneTokenTV.setText(String.valueOf(aminute) + " min");
+        }
+
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void ahours(int apassedMin) {
+        int ahour = apassedMin / 60;
+        int aremMin = apassedMin % 60;
+        String asHour = String.valueOf(ahour);
+        String asRemMin = String.valueOf(aremMin);
+        estimatedTv.setText(asHour + " hr " + asRemMin + " min");
 
     }
 

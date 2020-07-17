@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
     DatabaseReference dataReference;
     FirebaseUser firebaseUser;
 
-    String name = "a";
-    String location = "b";
+    String name = "name";
+    String location = "location";
     String userId = "c";
     String userBusiness = "default";
     String userImage = "noimage";
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
 
         toolbar = findViewById(R.id.myActionBar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Digital Token");
+        getSupportActionBar().setTitle("itoken");
 
         myRecyclerView = findViewById(R.id.recyclerView);
         myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
                     userImage = "bank";
                 }
 
-                Toast.makeText(MainActivity.this, name + " " + location + " " + userId, Toast.LENGTH_LONG).show();
                 insertDatas(name, location, userId, userImage);
                 myRecyclerAdapter.notifyDataSetChanged();
             }
@@ -146,57 +145,8 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
         models.add(m);
 
 
-        /*m = new MyModel();
-        m.setMyTitle("Dr. Salam MBBS, MD GENERAL MEDICINE");
-        m.setMyDisc("Care Pharma, Orkkateri, Vadakara");
-        m.setMyImg(R.drawable.clinic);
-        models.add(m);
-
-        m = new MyModel();
-        m.setMyTitle("Canara Bank");
-        m.setMyDisc("Orkkateri, Vadakara");
-        m.setMyImg(R.drawable.canara);
-        models.add(m);
-
-        m = new MyModel();
-        m.setMyTitle("Flour Mill");
-        m.setMyDisc("OPK, Orkkateri");
-        m.setMyImg(R.drawable.flour);
-        models.add(m);
-
-        m = new MyModel();
-        m.setMyTitle("Syndicate Bank");
-        m.setMyDisc("Orkkateri, Vadakara");
-        m.setMyImg(R.drawable.syndicate);
-        models.add(m);
-
-        m = new MyModel();
-        m.setMyTitle("Dr. Vijayan MBBS, MD GENERAL MEDICINE");
-        m.setMyDisc("Home, Vellikulangara");
-        m.setMyImg(R.drawable.homedr);
-        models.add(m);
-
-        m = new MyModel();
-        m.setMyTitle("SBI Bank");
-        m.setMyDisc("Orkkateri, Vadakara");
-        m.setMyImg(R.drawable.sbi);
-        models.add(m);
-
-        m = new MyModel();
-        m.setMyTitle("Dr. Salam MBBS, MD GENERAL MEDICINE");
-        m.setMyDisc("Sahakarana Hospital, Orkkateri");
-        m.setMyImg(R.drawable.hospital);
-        models.add(m);*/
-
-
     }
 
-
-    /*public boolean onCreateOptionMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
