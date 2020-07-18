@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
@@ -64,10 +65,18 @@ public class TokenStatus extends AppCompatActivity {
     MediaPlayer audioPlayer;
 
 
-    private Chronometer chronometer;
+
     private boolean isRunning = false;
     boolean callingTwice = false;
     boolean referenceNumBol = false;
+
+    boolean stopAlarm = false;
+    boolean stopEstimation = false;
+    boolean stopYourToken = false;
+
+    SharedPreferences alarmPreferences;
+    SharedPreferences yourTokenPreferences;
+
 
     ArrayList<Integer> times = new ArrayList<Integer>();
     String sDuration;
@@ -94,10 +103,8 @@ public class TokenStatus extends AppCompatActivity {
 
         toolbar = findViewById(R.id.myActionBar);
         setSupportActionBar(toolbar);
-
         Intent intent = getIntent();
         heading = intent.getStringExtra("name");
-
         getSupportActionBar().setTitle(heading);
         String description = intent.getStringExtra("location");
         getSupportActionBar().setSubtitle(description);
@@ -108,12 +115,11 @@ public class TokenStatus extends AppCompatActivity {
         timingTV = findViewById(R.id.timingTV);
         notificationTV = findViewById(R.id.notesTV);
         yourTokenTV = findViewById(R.id.myTokenTV);
-
         estimatedTv = findViewById(R.id.estimatedTV);
         oneTokenTV = findViewById(R.id.oneTokenTv);
 
         audioPlayer = MediaPlayer.create(this, R.raw.alarm);
-        chronometer = new Chronometer(this);
+
 
         Toast.makeText(this, userid, Toast.LENGTH_SHORT).show();
 
@@ -153,7 +159,6 @@ public class TokenStatus extends AppCompatActivity {
                     }
 
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -295,43 +300,7 @@ public class TokenStatus extends AppCompatActivity {
 
     public void start() {
 
-        if (!isRunning) {
-            chronometer.setBase(SystemClock.elapsedRealtime());
-            chronometer.start();
-            isRunning = true;
 
-        } else {
-
-            isRunning = false;
-            chronometer.stop();
-            int elapsedMillis = (int) (SystemClock.elapsedRealtime() - chronometer.getBase());
-            iDuration = elapsedMillis / 1000;
-            sDuration = String.valueOf(iDuration);
-            times.add(iDuration);
-            rcounter += 1;
-
-        }
-        if (rcounter > 6) {
-            int j = rcounter - 7;
-            sum = 0;
-            int avg = 0;
-            for (int i = rcounter - 1; (i + 1) > j; i--) {
-                sum += times.get(i);
-                Log.e("the sum is ", String.valueOf(sum));
-            }
-
-
-            avg = sum / 7;
-            if (myIntToken != countInt) {
-                seconds(avg * myIntToken);
-            } else if (myIntToken == countInt) {
-                estimatedTv.setText("0");
-            }
-            aseconds(avg);
-
-
-            Log.e("the counter is", String.valueOf(rcounter));
-        }
 
     }
 
@@ -368,7 +337,6 @@ public class TokenStatus extends AppCompatActivity {
 
     }
 
-
     /////////////////
 
     @SuppressLint("SetTextI18n")
@@ -402,7 +370,5 @@ public class TokenStatus extends AppCompatActivity {
         estimatedTv.setText(asHour + " hr " + asRemMin + " min");
 
     }
-
-
 
 }

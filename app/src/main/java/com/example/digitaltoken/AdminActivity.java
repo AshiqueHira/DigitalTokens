@@ -7,14 +7,18 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -25,6 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class AdminActivity extends AppCompatActivity {
 
@@ -56,6 +62,17 @@ public class AdminActivity extends AppCompatActivity {
     String notifications = "b";
     String userid = "b";
 
+    // Average time calculation stuff
+
+    private Chronometer chronometer;
+    private boolean isRunning = false;
+    ArrayList<Integer> times = new ArrayList<Integer>();
+    SharedPreferences arrayPreferences;
+    int intDuration;
+    int sevenSetter = 0;
+    int avg = 0;
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -76,6 +93,9 @@ public class AdminActivity extends AppCompatActivity {
         openTextView = findViewById(R.id.timingTV);
 
         timings = openTextView.getText().toString();
+
+        // Average time calculations stuff
+        chronometer = new Chronometer(this);
 
         msg = FirebaseAuth.getInstance().getCurrentUser();
         userid = msg.getUid();
@@ -243,5 +263,33 @@ public class AdminActivity extends AppCompatActivity {
     }
 
 
+    public void choronoMethod() {
+
+        if (!isRunning) {
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+            isRunning = true;
+
+        } else {
+            chronometer.stop();
+            int elapsedMillis = (int) (SystemClock.elapsedRealtime() - chronometer.getBase());
+            intDuration = elapsedMillis / 1000;
+            times.add(intDuration);
+            sevenSetter += 1;
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+        }
+        if (sevenSetter > 6) {
+            int j = sevenSetter - 7;
+            int sum = 0;
+            avg = 0;
+            for (int i = sevenSetter - 1; (i + 1) > j; i--) {
+                sum += times.get(i);
+                Log.e("the sum is ", String.valueOf(sum));
+            }
+            avg = sum / 7;
+            Log.e("the counter is", String.valueOf(sevenSetter));
+        }
+    }
 }
 
