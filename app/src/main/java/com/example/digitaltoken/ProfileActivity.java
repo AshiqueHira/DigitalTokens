@@ -4,9 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -35,6 +37,13 @@ public class ProfileActivity extends AppCompatActivity {
     EditText userLocationET;
     EditText userEmailET;
     EditText userPhoneET;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.profile_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
 
     @Override
@@ -98,5 +107,19 @@ public class ProfileActivity extends AppCompatActivity {
         usersDataReference.child(userId).child("userPhone").setValue(userPhone);
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        if (item.getItemId() == R.id.delete) {
+
+            FirebaseAuth.getInstance().signOut();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            return true;
+
+        }
+        return false;
     }
 }
