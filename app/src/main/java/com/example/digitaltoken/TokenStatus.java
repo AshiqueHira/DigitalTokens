@@ -14,6 +14,7 @@ import android.os.Bundle;
 
 import android.os.SystemClock;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -57,7 +58,7 @@ public class TokenStatus extends AppCompatActivity {
     String heading = " ";
     String myToken = "0";
     int myIntToken = 0;
-    int countInt = 0;
+    int countIntDB = 0;
 
     DatabaseReference userDatabaseReference;
     MediaPlayer audioPlayer;
@@ -126,32 +127,30 @@ public class TokenStatus extends AppCompatActivity {
                     timing = dataSnapshot.getValue(Message.class).getmTime();
                     notifications = dataSnapshot.getValue(Message.class).getmNotificaton();
 
-                    countInt = Integer.parseInt(count);
+                    countIntDB = Integer.parseInt(count);
                     counterTV.setText(count);
                     timingTV.setText(timing);
                     notificationTV.setText(notifications);
                     ringAlarm();
 
                     if (!referenceNumBol) {
-                        refenceCount = countInt + 1;
+                        refenceCount = countIntDB + 1;
                         referenceNumBol = true;
                     }
 
                     if (myIntToken > 7) {
 
-                        if (countInt == refenceCount && !callingTwice) {
+                        if (countIntDB == refenceCount && !callingTwice) {
                             start();
                             refenceCount += 1;
                             callingTwice = true;
-                        } else if (countInt == refenceCount && callingTwice) {
+                        } else if (countIntDB == refenceCount && callingTwice) {
                             start();
                             refenceCount += 1;
                             callingTwice = true;
                             start();
                         }
                     }
-
-
 
                 }
 
@@ -185,11 +184,16 @@ public class TokenStatus extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         alarmToken = alarmEditText.getText().toString();
-                        alarmIntToken = Integer.parseInt(alarmToken);
-                        if (myIntToken - countInt <= alarmIntToken) {
-                            alarmEditText.setError("Invalid Enter ! Please enter lesser number");
+
+                        if (TextUtils.isEmpty(alarmToken)) {
+                            alarmEditText.setError("Please enter a number");
                         } else {
-                            alarmBuilder.dismiss();
+                            alarmIntToken = Integer.parseInt(alarmToken);
+                            if (alarmIntToken >= (myIntToken - countIntDB)) {
+                                alarmEditText.setError("Invalid Enter ! Please enter lesser number");
+                            } else {
+                                alarmBuilder.dismiss();
+                            }
                         }
                     }
                 });
@@ -216,10 +220,11 @@ public class TokenStatus extends AppCompatActivity {
 
         } else if (myIntToken == 0) {
 
-        } else if (countInt == 0) {
+        } else if (countIntDB == 0) {
 
-        } else if (myIntToken - alarmIntToken == countInt) {
+        } else if ((myIntToken - alarmIntToken) == countIntDB) {
             audioPlayer.start();
+            dismissAlarm();
         }
     }
 
@@ -250,22 +255,39 @@ public class TokenStatus extends AppCompatActivity {
                     public void onClick(View view) {
 
                         myToken = input.getText().toString();
-                        myIntToken = Integer.parseInt(myToken);
-                        if (myIntToken <= countInt) {
-                            input.setError("Your token must be greater than the current token number");
-
-
+                        if (TextUtils.isEmpty(myToken)) {
+                            input.setError("Please Enter your Token Number");
                         } else {
-                            myToken = input.getText().toString();
                             myIntToken = Integer.parseInt(myToken);
-                            yourTokenTV.setText(myToken);
-                            dialog.dismiss();
+                            if (myIntToken <= countIntDB) {
+                                input.setError("Your token must be greater than the current token number");
+                            } else {
+                                myIntToken = Integer.parseInt(myToken);
+                                yourTokenTV.setText(myToken);
+                                dialog.dismiss();
+                            }
                         }
+
                     }
                 });
             }
         });
         dialog.show();
+    }
+
+    public void dismissAlarm() {
+
+        AlertDialog dismissDialog = new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_lock_idle_alarm)
+                .setTitle("Dismiss the Alarm")
+                .setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        audioPlayer.stop();
+                    }
+                })
+                .show();
+
     }
 
 
@@ -312,6 +334,7 @@ public class TokenStatus extends AppCompatActivity {
         }
 
     }
+
 
     @SuppressLint("SetTextI18n")
     public void seconds(int second) {
@@ -379,9 +402,6 @@ public class TokenStatus extends AppCompatActivity {
         estimatedTv.setText(asHour + " hr " + asRemMin + " min");
 
     }
-
-
-
 
 
 
