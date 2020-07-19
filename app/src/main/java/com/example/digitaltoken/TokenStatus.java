@@ -69,7 +69,6 @@ public class TokenStatus extends AppCompatActivity {
     MediaPlayer audioPlayer;
 
 
-
     private boolean isRunning = false;
     boolean callingTwice = false;
     boolean referenceNumBol = false;
@@ -90,8 +89,6 @@ public class TokenStatus extends AppCompatActivity {
     int rcounter;
     int sum = 0;
     int refenceCount = 1;
-
-
 
 
     @Override
@@ -129,9 +126,11 @@ public class TokenStatus extends AppCompatActivity {
         estimatedTv = findViewById(R.id.estimatedTV);
         oneTokenTV = findViewById(R.id.oneTokenTv);
 
+        yourTokenTV.setText(String.valueOf(savedYourToken));
+
         audioPlayer = MediaPlayer.create(this, R.raw.alarm);
 
-
+        start();
         Toast.makeText(this, userid, Toast.LENGTH_SHORT).show();
 
         userDatabaseReference = FirebaseDatabase.getInstance().getReference("Messages");
@@ -146,15 +145,14 @@ public class TokenStatus extends AppCompatActivity {
                     sAvgToken = dataSnapshot.getValue(Message.class).getAvgToken();
 
                     avgToken = Integer.parseInt(sAvgToken);
-                    start();
-
                     countIntDB = Integer.parseInt(count);
+                    start();
                     counterTV.setText(count);
                     timingTV.setText(timing);
                     notificationTV.setText(notifications);
                     ringAlarm();
-
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -165,6 +163,96 @@ public class TokenStatus extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        if (item.getItemId() == R.id.setAlarm) {
+
+            alarmDialog();
+            return true;
+        }
+        return false;
+    }
+
+    public void yourTokenClick(View view) {
+
+        final EditText input = new EditText(TokenStatus.this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(input)
+                .setTitle("Enter your Token Number")
+                .setPositiveButton("Set", null) //Set to null. We override the onclick
+                .setNegativeButton("Cancel", null)
+                .create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+
+                Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+
+                        myToken = input.getText().toString();
+                        if (TextUtils.isEmpty(myToken)) {
+                            input.setError("Please Enter your Token Number");
+                        } else {
+                            myIntToken = Integer.parseInt(myToken);
+                            if (myIntToken <= countIntDB) {
+                                input.setError("Your token must be greater than the current token number");
+                            } else {
+                                myIntToken = Integer.parseInt(myToken);
+                                savedYourToken = myIntToken;
+                                yourTokenPreferences.edit().putInt("mToken", savedYourToken).apply();
+                                yourTokenTV.setText(String.valueOf(savedYourToken));
+                                start();   // for setting the estimated time.
+                                dialog.dismiss();
+                            }
+                        }
+                    }
+                });
+            }
+        });
+        dialog.show();
+    }
+
+////////////////////////// time calculations
+
+    public void start() {
+
+        aseconds(avgToken);
+
+
+        if (savedYourToken == countIntDB) {
+            stopthree = true;
+            savedYourToken = 0;
+            savedAlarmToken = 0;
+            yourTokenPreferences.edit().putInt("mToken", savedYourToken).apply();
+            alarmPreferences.edit().putInt("mAlarm", savedAlarmToken).apply();
+
+            yourTokenTV.setText(String.valueOf(savedYourToken));
+            estimatedTv.setText("...");
+
+        }
+        Log.e("the savedYourToken is ", Integer.toString(savedYourToken));
+
+        if (savedYourToken > 7) {
+            seconds(avgToken * (savedYourToken - countIntDB));
+        } else {
+            estimatedTv.setText("...");
+        }
+
+    }
+
+    // Alarm Stuff
     public void alarmDialog() {
 
         LayoutInflater inflater = getLayoutInflater();
@@ -205,82 +293,6 @@ public class TokenStatus extends AppCompatActivity {
         alarmBuilder.show();
     }
 
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        super.onOptionsItemSelected(item);
-
-        if (item.getItemId() == R.id.setAlarm) {
-
-            alarmDialog();
-            return true;
-        }
-        return false;
-    }
-
-    public void ringAlarm() {
-        if (savedAlarmToken == 0) {
-
-        } else if (savedYourToken == 0) {
-
-        } else if (countIntDB == 0) {
-
-        } else if ((savedYourToken - savedAlarmToken) == countIntDB) {
-            audioPlayer.start();
-            dismissAlarm();
-        }
-
-    }
-
-    public void yourTokenClick(View view) {
-
-        final EditText input = new EditText(TokenStatus.this);
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
-        final AlertDialog dialog = new AlertDialog.Builder(this)
-                .setView(input)
-                .setTitle("Enter your Token Number")
-                .setPositiveButton("Set", null) //Set to null. We override the onclick
-                .setNegativeButton("Cancel", null)
-                .create();
-
-        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
-
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-
-                Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
-                button.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View view) {
-
-                        myToken = input.getText().toString();
-                        if (TextUtils.isEmpty(myToken)) {
-                            input.setError("Please Enter your Token Number");
-                        } else {
-                            myIntToken = Integer.parseInt(myToken);
-                            if (myIntToken <= countIntDB) {
-                                input.setError("Your token must be greater than the current token number");
-                            } else {
-                                myIntToken = Integer.parseInt(myToken);
-                                yourTokenPreferences.edit().putInt("mToken", myIntToken).apply();
-                                yourTokenTV.setText(myToken);
-                                start();
-                                dialog.dismiss();
-                            }
-                        }
-
-                    }
-                });
-            }
-        });
-        dialog.show();
-    }
-
     public void dismissAlarm() {
 
         AlertDialog dismissDialog = new AlertDialog.Builder(this)
@@ -296,35 +308,17 @@ public class TokenStatus extends AppCompatActivity {
 
     }
 
+    public void ringAlarm() {
+        if (savedAlarmToken == 0) {
 
-////////////////////////// time calculations
+        } else if (savedYourToken == 0) {
 
-    public void start() {
+        } else if (countIntDB == 0) {
 
-        aseconds(avgToken);
-        if (savedYourToken == 0) {
-            stopthree = true;
+        } else if ((savedYourToken - savedAlarmToken) == countIntDB) {
+            audioPlayer.start();
+            dismissAlarm();
         }
-
-        if (savedYourToken == countIntDB) {
-            stopthree = true;
-            savedYourToken = 0;
-            savedAlarmToken = 0;
-            yourTokenPreferences.edit().putInt("mToken", savedYourToken).apply();
-            alarmPreferences.edit().putInt("mAlarm", savedAlarmToken).apply();
-
-        }
-        Log.e("the error is ", Integer.toString(savedYourToken));
-        if (stopthree != true) {
-            if (savedYourToken > 7) {
-                seconds(avgToken * (savedYourToken - countIntDB));
-            } else {
-                estimatedTv.setText("...");
-            }
-        }
-
-
-
     }
 
     // these three are for estimated time calculations that is seconds
