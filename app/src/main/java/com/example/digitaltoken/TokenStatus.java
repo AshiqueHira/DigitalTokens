@@ -74,6 +74,7 @@ public class TokenStatus extends AppCompatActivity {
     boolean referenceNumBol = false;
 
     boolean stopthree = false;
+    boolean noCalculations = false;
 
 
     SharedPreferences alarmPreferences;
@@ -84,11 +85,7 @@ public class TokenStatus extends AppCompatActivity {
 
 
     ArrayList<Integer> times = new ArrayList<Integer>();
-    String sDuration;
-    int iDuration;
-    int rcounter;
-    int sum = 0;
-    int refenceCount = 1;
+
 
 
     @Override
@@ -146,11 +143,18 @@ public class TokenStatus extends AppCompatActivity {
 
                     avgToken = Integer.parseInt(sAvgToken);
                     countIntDB = Integer.parseInt(count);
-                    start();
                     counterTV.setText(count);
                     timingTV.setText(timing);
                     notificationTV.setText(notifications);
-                    ringAlarm();
+
+                    if (avgToken == -1) {
+                        noCalculations = true;
+                        oneTokenTV.setText(".....");
+                    } else {
+                        noCalculations = false;
+                        start();
+                        ringAlarm();
+                    }
                 }
 
                 @Override
@@ -228,26 +232,28 @@ public class TokenStatus extends AppCompatActivity {
 
     public void start() {
 
-        aseconds(avgToken);
+        if (!noCalculations) {
 
+            aseconds(avgToken);
 
-        if (savedYourToken == countIntDB) {
-            stopthree = true;
-            savedYourToken = 0;
-            savedAlarmToken = 0;
-            yourTokenPreferences.edit().putInt("mToken", savedYourToken).apply();
-            alarmPreferences.edit().putInt("mAlarm", savedAlarmToken).apply();
+            if (savedYourToken == countIntDB) {
+                stopthree = true;
+                savedYourToken = 0;
+                savedAlarmToken = 0;
+                yourTokenPreferences.edit().putInt("mToken", savedYourToken).apply();
+                alarmPreferences.edit().putInt("mAlarm", savedAlarmToken).apply();
 
-            yourTokenTV.setText(String.valueOf(savedYourToken));
-            estimatedTv.setText("...");
+                yourTokenTV.setText(String.valueOf(savedYourToken));
+                estimatedTv.setText(".....");
 
-        }
-        Log.e("the savedYourToken is ", Integer.toString(savedYourToken));
+            }
+            Log.e("the savedYourToken is ", Integer.toString(savedYourToken));
 
-        if (savedYourToken > 7) {
-            seconds(avgToken * (savedYourToken - countIntDB));
-        } else {
-            estimatedTv.setText("...");
+            if (savedYourToken > 7) {
+                seconds(avgToken * (savedYourToken - countIntDB));
+            } else {
+                estimatedTv.setText("...");
+            }
         }
 
     }

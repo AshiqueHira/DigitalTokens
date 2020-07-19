@@ -278,7 +278,13 @@ public class AdminActivity extends AppCompatActivity {
         msgDataReference.child(userid).child("mCount").setValue(counter);
         msgDataReference.child(userid).child("mNotificaton").setValue(notifications);
         msgDataReference.child(userid).child("mTime").setValue(timings);
-        msgDataReference.child(userid).child("avgToken").setValue(avgToken);
+        if (count == 0) {
+            avgToken = "-1";
+            sevenSetter = 0;
+            msgDataReference.child(userid).child("avgToken").setValue(avgToken);
+        } else {
+            msgDataReference.child(userid).child("avgToken").setValue(avgToken);
+        }
     }
 
 
