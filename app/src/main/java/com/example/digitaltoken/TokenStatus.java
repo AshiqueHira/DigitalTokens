@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -58,6 +59,9 @@ public class TokenStatus extends AppCompatActivity {
     int alarmIntToken = 0;
     String heading = " ";
     String myToken = "0";
+    String sAvgToken = "0";
+
+    int avgToken = 0;
     int myIntToken = 0;
     int countIntDB = 0;
 
@@ -70,12 +74,14 @@ public class TokenStatus extends AppCompatActivity {
     boolean callingTwice = false;
     boolean referenceNumBol = false;
 
-    boolean stopAlarm = false;
-    boolean stopEstimation = false;
-    boolean stopYourToken = false;
+    boolean stopthree = false;
+
 
     SharedPreferences alarmPreferences;
     SharedPreferences yourTokenPreferences;
+
+    int savedAlarmToken;
+    int savedYourToken;
 
 
     ArrayList<Integer> times = new ArrayList<Integer>();
@@ -110,6 +116,11 @@ public class TokenStatus extends AppCompatActivity {
         getSupportActionBar().setSubtitle(description);
         userid = intent.getStringExtra("userId");
 
+        alarmPreferences = this.getSharedPreferences("com.example.digitaltoken", Context.MODE_PRIVATE);
+        yourTokenPreferences = this.getSharedPreferences("com.example.digitaltoken", Context.MODE_PRIVATE);
+
+        savedYourToken = yourTokenPreferences.getInt("mToken", 0);
+        savedAlarmToken = alarmPreferences.getInt("mAlarm", 0);
 
         counterTV = findViewById(R.id.counterTV);
         timingTV = findViewById(R.id.timingTV);
@@ -132,31 +143,16 @@ public class TokenStatus extends AppCompatActivity {
                     count = dataSnapshot.getValue(Message.class).getmCount();
                     timing = dataSnapshot.getValue(Message.class).getmTime();
                     notifications = dataSnapshot.getValue(Message.class).getmNotificaton();
+                    sAvgToken = dataSnapshot.getValue(Message.class).getAvgToken();
+
+                    avgToken = Integer.parseInt(sAvgToken);
+                    start();
 
                     countIntDB = Integer.parseInt(count);
                     counterTV.setText(count);
                     timingTV.setText(timing);
                     notificationTV.setText(notifications);
                     ringAlarm();
-
-                    if (!referenceNumBol) {
-                        refenceCount = countIntDB + 1;
-                        referenceNumBol = true;
-                    }
-
-                    if (myIntToken > 7) {
-
-                        if (countIntDB == refenceCount && !callingTwice) {
-                            start();
-                            refenceCount += 1;
-                            callingTwice = true;
-                        } else if (countIntDB == refenceCount && callingTwice) {
-                            start();
-                            refenceCount += 1;
-                            callingTwice = true;
-                            start();
-                        }
-                    }
 
                 }
                 @Override
@@ -197,6 +193,8 @@ public class TokenStatus extends AppCompatActivity {
                             if (alarmIntToken >= (myIntToken - countIntDB)) {
                                 alarmEditText.setError("Invalid Enter ! Please enter lesser number");
                             } else {
+                                alarmIntToken = Integer.parseInt(alarmToken);
+                                alarmPreferences.edit().putInt("mAlarm", alarmIntToken).apply();
                                 alarmBuilder.dismiss();
                             }
                         }
@@ -221,16 +219,17 @@ public class TokenStatus extends AppCompatActivity {
     }
 
     public void ringAlarm() {
-        if (alarmIntToken == 0) {
+        if (savedAlarmToken == 0) {
 
-        } else if (myIntToken == 0) {
+        } else if (savedYourToken == 0) {
 
         } else if (countIntDB == 0) {
 
-        } else if ((myIntToken - alarmIntToken) == countIntDB) {
+        } else if ((savedYourToken - savedAlarmToken) == countIntDB) {
             audioPlayer.start();
             dismissAlarm();
         }
+
     }
 
     public void yourTokenClick(View view) {
@@ -268,6 +267,7 @@ public class TokenStatus extends AppCompatActivity {
                                 input.setError("Your token must be greater than the current token number");
                             } else {
                                 myIntToken = Integer.parseInt(myToken);
+                                yourTokenPreferences.edit().putInt("mToken", myIntToken).apply();
                                 yourTokenTV.setText(myToken);
                                 dialog.dismiss();
                             }
@@ -300,11 +300,27 @@ public class TokenStatus extends AppCompatActivity {
 
     public void start() {
 
+        aseconds(avgToken);
+
+        if (savedYourToken == countIntDB) {
+            stopthree = true;
+            savedYourToken = 0;
+            savedAlarmToken = 0;
+            yourTokenPreferences.edit().putInt("mToken", savedYourToken).apply();
+            alarmPreferences.edit().putInt("mAlarm", savedAlarmToken).apply();
+
+        }
+        if (savedYourToken > 7) {
+            seconds(avgToken * savedYourToken);
+        } else {
+            estimatedTv.setText("...");
+        }
+
 
 
     }
 
-
+    // these three are for estimated time calculations that is seconds
     @SuppressLint("SetTextI18n")
     public void seconds(int second) {
         int checkSecond = second / 60;
@@ -337,8 +353,7 @@ public class TokenStatus extends AppCompatActivity {
 
     }
 
-    /////////////////
-
+    // these three are for average time calculations that is aseconds
     @SuppressLint("SetTextI18n")
     public void aseconds(int asecond) {
         int acheckSecond = asecond / 60;
@@ -367,7 +382,7 @@ public class TokenStatus extends AppCompatActivity {
         int aremMin = apassedMin % 60;
         String asHour = String.valueOf(ahour);
         String asRemMin = String.valueOf(aremMin);
-        estimatedTv.setText(asHour + " hr " + asRemMin + " min");
+        oneTokenTV.setText(asHour + " hr " + asRemMin + " min");
 
     }
 

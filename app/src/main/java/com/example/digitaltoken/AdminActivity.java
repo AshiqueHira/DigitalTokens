@@ -58,10 +58,12 @@ public class AdminActivity extends AppCompatActivity {
     FirebaseUser msg;
 
     String counter = Integer.toString(count);
-    String timings = "b";
-    String notifications = "b";
+    String timings = "...";
+    String notifications = "No Notifications Yet";
     String userid = "b";
+    String avgToken = "0";
 
+    boolean startingCall = true;
     // Average time calculation stuff
 
     private Chronometer chronometer;
@@ -71,6 +73,8 @@ public class AdminActivity extends AppCompatActivity {
     int intDuration;
     int sevenSetter = 0;
     int avg = 0;
+    int dbControlInt;
+    boolean dbControlBol = false;
 
 
     @Override
@@ -101,7 +105,7 @@ public class AdminActivity extends AppCompatActivity {
         userid = msg.getUid();
         msgDataReference = FirebaseDatabase.getInstance().getReference("Messages");
 
-        msgDataReference.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+        /*msgDataReference.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 value = dataSnapshot.getValue(Message.class).getmCount();
@@ -114,6 +118,38 @@ public class AdminActivity extends AppCompatActivity {
                 notifications = dataSnapshot.getValue(Message.class).getmNotificaton();
                 notesTextView.setText(notifications);
 
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });*/
+        // calling the DB for only reading the average value
+        msgDataReference.child(userid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                value = dataSnapshot.getValue(Message.class).getmCount();
+                timings = dataSnapshot.getValue(Message.class).getmTime();
+                notifications = dataSnapshot.getValue(Message.class).getmNotificaton();
+                count = Integer.parseInt(value);
+
+                if (startingCall) {
+                    counterTextView.setText(value);
+                    openTextView.setText(timings);
+                    notesTextView.setText(notifications);
+                    startingCall = false;
+                }
+                if (!dbControlBol) {
+                    dbControlInt = count;
+                    dbControlBol = true;
+                }
+                if (dbControlInt != count) {
+                    dbControlInt += 1;
+                    chronoMethod();
+
+                }
             }
 
             @Override
@@ -237,12 +273,12 @@ public class AdminActivity extends AppCompatActivity {
         updateDatas();
     }
 
-
+    // update datas into database.........................
     public void updateDatas() {
-
         msgDataReference.child(userid).child("mCount").setValue(counter);
         msgDataReference.child(userid).child("mNotificaton").setValue(notifications);
         msgDataReference.child(userid).child("mTime").setValue(timings);
+        msgDataReference.child(userid).child("avgToken").setValue(avgToken);
     }
 
 
@@ -263,7 +299,7 @@ public class AdminActivity extends AppCompatActivity {
     }
 
 
-    public void choronoMethod() {
+    public void chronoMethod() {
 
         if (!isRunning) {
             chronometer.setBase(SystemClock.elapsedRealtime());
@@ -288,6 +324,7 @@ public class AdminActivity extends AppCompatActivity {
                 Log.e("the sum is ", String.valueOf(sum));
             }
             avg = sum / 7;
+            avgToken = String.valueOf(avg);
             Log.e("the counter is", String.valueOf(sevenSetter));
         }
     }

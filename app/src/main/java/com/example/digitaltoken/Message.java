@@ -5,16 +5,18 @@ public class Message {
     String mTime;
     String mCount;
     String mNotificaton;
+    String avgToken;
 
     public Message() {
 
     }
 
-    public Message(String mUserId, String mTime, String mCount, String mNotificaton) {
+    public Message(String mUserId, String mTime, String mCount, String mNotificaton, String avgToken) {
         this.mUserId = mUserId;
         this.mTime = mTime;
         this.mCount = mCount;
         this.mNotificaton = mNotificaton;
+        this.avgToken = avgToken;
     }
 
     public String getmUserId() {
@@ -31,5 +33,9 @@ public class Message {
 
     public String getmNotificaton() {
         return mNotificaton;
+    }
+
+    public String getAvgToken() {
+        return avgToken;
     }
 }

@@ -43,8 +43,9 @@ public class SignUpActivity extends AppCompatActivity {
     String userName = "A";
 
     String counter = "0";
-    String timings = "b";
-    String notifications = "b";
+    String timings = "...";
+    String notifications = "No Notifications Yet";
+    String sAvgToken = "0";
 
 
 
@@ -160,7 +161,7 @@ public class SignUpActivity extends AppCompatActivity {
         User user = new User(userid, userEmail, userPhone, userBusiness, location, userName);
         usersDataReference.child(userid).setValue(user);
 
-        Message message = new Message(userid, timings, counter, notifications);
+        Message message = new Message(userid, timings, counter, notifications, sAvgToken);
         msgDataReference.child(userid).setValue(message);
     }
 }
