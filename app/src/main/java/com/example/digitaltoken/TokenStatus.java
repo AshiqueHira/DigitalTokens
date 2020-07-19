@@ -269,6 +269,7 @@ public class TokenStatus extends AppCompatActivity {
                                 myIntToken = Integer.parseInt(myToken);
                                 yourTokenPreferences.edit().putInt("mToken", myIntToken).apply();
                                 yourTokenTV.setText(myToken);
+                                start();
                                 dialog.dismiss();
                             }
                         }
@@ -301,6 +302,9 @@ public class TokenStatus extends AppCompatActivity {
     public void start() {
 
         aseconds(avgToken);
+        if (savedYourToken == 0) {
+            stopthree = true;
+        }
 
         if (savedYourToken == countIntDB) {
             stopthree = true;
@@ -310,10 +314,13 @@ public class TokenStatus extends AppCompatActivity {
             alarmPreferences.edit().putInt("mAlarm", savedAlarmToken).apply();
 
         }
-        if (savedYourToken > 7) {
-            seconds(avgToken * savedYourToken);
-        } else {
-            estimatedTv.setText("...");
+        Log.e("the error is ", Integer.toString(savedYourToken));
+        if (stopthree != true) {
+            if (savedYourToken > 7) {
+                seconds(avgToken * (savedYourToken - countIntDB));
+            } else {
+                estimatedTv.setText("...");
+            }
         }
 
 
