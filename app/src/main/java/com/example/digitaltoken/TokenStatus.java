@@ -150,6 +150,7 @@ public class TokenStatus extends AppCompatActivity {
                     if (avgToken == -1) {
                         noCalculations = true;
                         oneTokenTV.setText(".....");
+                        estimatedTv.setText(".....");
                     } else {
                         noCalculations = false;
                         start();
@@ -249,10 +250,10 @@ public class TokenStatus extends AppCompatActivity {
             }
             Log.e("the savedYourToken is ", Integer.toString(savedYourToken));
 
-            if (savedYourToken > 7) {
+            if (savedYourToken > 7 && !noCalculations) {
                 seconds(avgToken * (savedYourToken - countIntDB));
             } else {
-                estimatedTv.setText("...");
+                estimatedTv.setText(".....");
             }
         }
 

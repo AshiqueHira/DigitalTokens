@@ -75,6 +75,7 @@ public class AdminActivity extends AppCompatActivity {
     int avg = 0;
     int dbControlInt;
     boolean dbControlBol = false;
+    boolean forceStop = false;
 
 
     @Override
@@ -145,7 +146,7 @@ public class AdminActivity extends AppCompatActivity {
                     dbControlInt = count;
                     dbControlBol = true;
                 }
-                if (dbControlInt != count) {
+                if (dbControlInt != count && dbControlBol) {
                     dbControlInt += 1;
                     chronoMethod();
 
@@ -279,11 +280,15 @@ public class AdminActivity extends AppCompatActivity {
         msgDataReference.child(userid).child("mNotificaton").setValue(notifications);
         msgDataReference.child(userid).child("mTime").setValue(timings);
         if (count == 0) {
+            dbControlBol = false;
             avgToken = "-1";
             sevenSetter = 0;
+            isRunning = false;
             msgDataReference.child(userid).child("avgToken").setValue(avgToken);
+            Log.e("the upper Value", avgToken);
         } else {
             msgDataReference.child(userid).child("avgToken").setValue(avgToken);
+            Log.e("the lower Value", avgToken);
         }
     }
 
@@ -306,6 +311,7 @@ public class AdminActivity extends AppCompatActivity {
 
 
     public void chronoMethod() {
+
 
         if (!isRunning) {
             chronometer.setBase(SystemClock.elapsedRealtime());
