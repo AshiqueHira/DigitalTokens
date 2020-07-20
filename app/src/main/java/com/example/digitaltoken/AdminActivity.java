@@ -7,14 +7,18 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -25,6 +29,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class AdminActivity extends AppCompatActivity {
 
@@ -52,9 +58,25 @@ public class AdminActivity extends AppCompatActivity {
     FirebaseUser msg;
 
     String counter = Integer.toString(count);
-    String timings = "b";
-    String notifications = "b";
+    String timings = "...";
+    String notifications = "No Notifications Yet";
     String userid = "b";
+    String avgToken = "0";
+
+    boolean startingCall = true;
+    // Average time calculation stuff
+
+    private Chronometer chronometer;
+    private boolean isRunning = false;
+    ArrayList<Integer> times = new ArrayList<Integer>();
+    SharedPreferences arrayPreferences;
+    int intDuration;
+    int sevenSetter = 0;
+    int avg = 0;
+    int dbControlInt;
+    boolean dbControlBol = false;
+    boolean forceStop = false;
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -77,11 +99,14 @@ public class AdminActivity extends AppCompatActivity {
 
         timings = openTextView.getText().toString();
 
+        // Average time calculations stuff
+        chronometer = new Chronometer(this);
+
         msg = FirebaseAuth.getInstance().getCurrentUser();
         userid = msg.getUid();
         msgDataReference = FirebaseDatabase.getInstance().getReference("Messages");
 
-        msgDataReference.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
+        /*msgDataReference.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 value = dataSnapshot.getValue(Message.class).getmCount();
@@ -94,6 +119,38 @@ public class AdminActivity extends AppCompatActivity {
                 notifications = dataSnapshot.getValue(Message.class).getmNotificaton();
                 notesTextView.setText(notifications);
 
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });*/
+        // calling the DB for only reading the average value
+        msgDataReference.child(userid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                value = dataSnapshot.getValue(Message.class).getmCount();
+                timings = dataSnapshot.getValue(Message.class).getmTime();
+                notifications = dataSnapshot.getValue(Message.class).getmNotificaton();
+                count = Integer.parseInt(value);
+
+                if (startingCall) {
+                    counterTextView.setText(value);
+                    openTextView.setText(timings);
+                    notesTextView.setText(notifications);
+                    startingCall = false;
+                }
+                if (!dbControlBol) {
+                    dbControlInt = count;
+                    dbControlBol = true;
+                }
+                if (dbControlInt != count && dbControlBol) {
+                    dbControlInt += 1;
+                    chronoMethod();
+
+                }
             }
 
             @Override
@@ -217,12 +274,22 @@ public class AdminActivity extends AppCompatActivity {
         updateDatas();
     }
 
-
+    // update datas into database.........................
     public void updateDatas() {
-
         msgDataReference.child(userid).child("mCount").setValue(counter);
         msgDataReference.child(userid).child("mNotificaton").setValue(notifications);
         msgDataReference.child(userid).child("mTime").setValue(timings);
+        if (count == 0) {
+            dbControlBol = false;
+            avgToken = "-1";
+            sevenSetter = 0;
+            isRunning = false;
+            msgDataReference.child(userid).child("avgToken").setValue(avgToken);
+            Log.e("the upper Value", avgToken);
+        } else {
+            msgDataReference.child(userid).child("avgToken").setValue(avgToken);
+            Log.e("the lower Value", avgToken);
+        }
     }
 
 
@@ -243,5 +310,35 @@ public class AdminActivity extends AppCompatActivity {
     }
 
 
+    public void chronoMethod() {
+
+
+        if (!isRunning) {
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+            isRunning = true;
+
+        } else {
+            chronometer.stop();
+            int elapsedMillis = (int) (SystemClock.elapsedRealtime() - chronometer.getBase());
+            intDuration = elapsedMillis / 1000;
+            times.add(intDuration);
+            sevenSetter += 1;
+            chronometer.setBase(SystemClock.elapsedRealtime());
+            chronometer.start();
+        }
+        if (sevenSetter > 6) {
+            int j = sevenSetter - 7;
+            int sum = 0;
+            avg = 0;
+            for (int i = sevenSetter - 1; (i + 1) > j; i--) {
+                sum += times.get(i);
+                Log.e("the sum is ", String.valueOf(sum));
+            }
+            avg = sum / 7;
+            avgToken = String.valueOf(avg);
+            Log.e("the counter is", String.valueOf(sevenSetter));
+        }
+    }
 }
 
