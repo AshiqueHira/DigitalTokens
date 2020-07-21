@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFAFAFA"
     tools:context=".TokenStatus">
 
     <include layout="@layout/myappbar" />
@@ -24,24 +25,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:background="#DFFADEDE"
-        android:paddingTop="10dp"
-        android:text="TOKEN NUMBER"
-        android:textAlignment="center"
-        android:textColor="#0C0C0C"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timingTV" />
-
-    <TextView
         android:id="@+id/counterTV"
         android:layout_width="0dp"
-        android:layout_height="100dp"
-        android:background="#DFFADEDE"
+        android:layout_height="130dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/tokennumber_curves"
+        android:paddingTop="18dp"
         android:text="0"
         android:textAlignment="center"
         android:textColor="#CC1414"
@@ -50,7 +41,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/timingTV" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#00FAEBEB"
+        android:paddingTop="10dp"
+        android:text="TOKEN NUMBER"
+        android:textAlignment="center"
+        android:textColor="#0C0C0C"
+        app:layout_constraintEnd_toEndOf="@+id/counterTV"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/counterTV"
+        app:layout_constraintTop_toTopOf="@+id/counterTV" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
 
@@ -70,8 +75,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginEnd="5dp"
-            android:background="#E3F6D5"
+            android:background="@drawable/estitv_curves"
             android:paddingHorizontal="5dp"
             android:text="Your Token"
             android:textAlignment="center"
@@ -87,7 +91,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="10dp"
-            android:background="#E3F6D5"
+            android:background="@drawable/estitv_curves"
             android:paddingHorizontal="5dp"
             android:text="Estimated Time"
             android:textAlignment="center"
@@ -100,11 +104,10 @@
             android:id="@+id/oneTokenText"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:background="#E3F6D5"
+            android:background="@drawable/estitv_curves"
             android:paddingHorizontal="5dp"
             android:text="One Token Time"
             android:textAlignment="center"
@@ -183,7 +186,7 @@
         android:id="@+id/textView7"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="15dp"
         android:text="Notifications:"
         android:textSize="14dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -196,7 +199,6 @@
         android:paddingRight="15dp"
         android:text="Date: 31/5/2020  Day: Sunday"
         android:textAlignment="textEnd"
-        android:textColor="#FD4747"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView7"
@@ -207,13 +209,13 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
 
         android:layout_marginBottom="10dp"
-        android:background="@color/common_google_signin_btn_text_dark_default"
+        android:background="@drawable/curved_corner"
         android:paddingStart="15dp"
         android:paddingTop="20dp"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
