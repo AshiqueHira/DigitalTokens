@@ -197,7 +197,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:paddingRight="15dp"
-        android:text="Date: 31/5/2020  Day: Sunday"
+        android:text="Date: 31/5/2020"
         android:textAlignment="textEnd"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
