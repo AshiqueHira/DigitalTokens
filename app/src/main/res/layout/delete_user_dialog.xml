@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="Delete Account"
-        android:textSize="30sp"
+        android:textSize="20sp"
         android:paddingVertical="10dp"
         android:paddingHorizontal="15dp"
         android:textStyle="bold" />
@@ -23,15 +23,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Email         : "
-            android:textSize="20sp" />
+            android:text="Email : "
+            android:textSize="15sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/emailTextView"
             android:text="myName@gmail.com"
-            android:textSize="20sp" />
+            android:textSize="15sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -45,12 +45,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Password : "
-            android:textSize="20sp" />
+            android:textSize="15sp" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/passwordEditText"
-            android:textSize="20sp" />
+            android:inputType="textPassword"
+            android:textSize="15sp" />
     </LinearLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>
