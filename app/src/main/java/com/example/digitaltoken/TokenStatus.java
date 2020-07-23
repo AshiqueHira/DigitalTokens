@@ -296,8 +296,8 @@ public class TokenStatus extends AppCompatActivity {
                             if (alarmIntToken >= (savedYourToken - countIntDB)) {
                                 alarmEditText.setError("Invalid Enter ! Please enter lesser number");
                             } else {
-                                alarmIntToken = Integer.parseInt(alarmToken);
-                                alarmPreferences.edit().putInt("mAlarm", alarmIntToken).apply();
+                                savedAlarmToken = Integer.parseInt(alarmToken);
+                                alarmPreferences.edit().putInt("mAlarm", savedAlarmToken).apply();
                                 alarmBuilder.dismiss();
                             }
                         }
