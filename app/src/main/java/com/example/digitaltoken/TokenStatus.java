@@ -147,6 +147,8 @@ public class TokenStatus extends AppCompatActivity {
                     timingTV.setText(timing);
                     notificationTV.setText(notifications);
 
+                    Log.e("youe AVERAGE TOKEN IS", sAvgToken);
+                    ringAlarm();
                     if (avgToken == -1) {
                         noCalculations = true;
                         oneTokenTV.setText(".....");
@@ -154,7 +156,7 @@ public class TokenStatus extends AppCompatActivity {
                     } else {
                         noCalculations = false;
                         start();
-                        ringAlarm();
+
                     }
                 }
 
@@ -174,8 +176,14 @@ public class TokenStatus extends AppCompatActivity {
 
         if (item.getItemId() == R.id.setAlarm) {
 
-            alarmDialog();
-            return true;
+            if (savedYourToken != 0) {
+                alarmDialog();
+                return true;
+            } else {
+                Toast.makeText(this, "Please enter Your Token before setting alarm", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
         }
         return false;
     }
@@ -285,7 +293,7 @@ public class TokenStatus extends AppCompatActivity {
                             alarmEditText.setError("Please enter a number");
                         } else {
                             alarmIntToken = Integer.parseInt(alarmToken);
-                            if (alarmIntToken >= (myIntToken - countIntDB)) {
+                            if (alarmIntToken >= (savedYourToken - countIntDB)) {
                                 alarmEditText.setError("Invalid Enter ! Please enter lesser number");
                             } else {
                                 alarmIntToken = Integer.parseInt(alarmToken);
@@ -324,6 +332,7 @@ public class TokenStatus extends AppCompatActivity {
 
         } else if ((savedYourToken - savedAlarmToken) == countIntDB) {
             audioPlayer.start();
+            savedAlarmToken = 0;
             dismissAlarm();
         }
     }

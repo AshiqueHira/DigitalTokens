@@ -101,32 +101,15 @@ public class AdminActivity extends AppCompatActivity {
 
         // Average time calculations stuff
         chronometer = new Chronometer(this);
+        dbControlBol = false;
+        sevenSetter = 0;
+        isRunning = false;
+        avg = -1;
 
         msg = FirebaseAuth.getInstance().getCurrentUser();
         userid = msg.getUid();
         msgDataReference = FirebaseDatabase.getInstance().getReference("Messages");
 
-        /*msgDataReference.child(userid).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                value = dataSnapshot.getValue(Message.class).getmCount();
-                count = Integer.parseInt(value);
-                counterTextView.setText(value);
-
-                timings = dataSnapshot.getValue(Message.class).getmTime();
-                openTextView.setText(timings);
-
-                notifications = dataSnapshot.getValue(Message.class).getmNotificaton();
-                notesTextView.setText(notifications);
-
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
         // calling the DB for only reading the average value
         msgDataReference.child(userid).addValueEventListener(new ValueEventListener() {
             @Override
@@ -286,7 +269,7 @@ public class AdminActivity extends AppCompatActivity {
             isRunning = false;
             msgDataReference.child(userid).child("avgToken").setValue(avgToken);
             Log.e("the upper Value", avgToken);
-        } else {
+        } else if (avg != -1) {
             msgDataReference.child(userid).child("avgToken").setValue(avgToken);
             Log.e("the lower Value", avgToken);
         }
