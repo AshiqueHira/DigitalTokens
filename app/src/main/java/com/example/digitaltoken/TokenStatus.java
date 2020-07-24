@@ -113,6 +113,7 @@ public class TokenStatus extends AppCompatActivity {
         alarmPreferences = this.getSharedPreferences("com.example.digitaltoken", Context.MODE_PRIVATE);
         yourTokenPreferences = this.getSharedPreferences("com.example.digitaltoken", Context.MODE_PRIVATE);
 
+
         savedYourToken = yourTokenPreferences.getInt("mToken", 0);
         savedAlarmToken = alarmPreferences.getInt("mAlarm", 0);
 
@@ -296,8 +297,8 @@ public class TokenStatus extends AppCompatActivity {
                             if (alarmIntToken >= (savedYourToken - countIntDB)) {
                                 alarmEditText.setError("Invalid Enter ! Please enter lesser number");
                             } else {
-                                alarmIntToken = Integer.parseInt(alarmToken);
-                                alarmPreferences.edit().putInt("mAlarm", alarmIntToken).apply();
+                                savedAlarmToken = Integer.parseInt(alarmToken);
+                                alarmPreferences.edit().putInt("mAlarm", savedAlarmToken).apply();
                                 alarmBuilder.dismiss();
                             }
                         }
@@ -316,7 +317,8 @@ public class TokenStatus extends AppCompatActivity {
                 .setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int i) {
-                        audioPlayer.stop();
+                        audioPlayer.pause();
+                        audioPlayer.seekTo(0);
                     }
                 })
                 .show();
@@ -332,6 +334,7 @@ public class TokenStatus extends AppCompatActivity {
 
         } else if ((savedYourToken - savedAlarmToken) == countIntDB) {
             audioPlayer.start();
+            audioPlayer.setScreenOnWhilePlaying(true);
             savedAlarmToken = 0;
             dismissAlarm();
         }
