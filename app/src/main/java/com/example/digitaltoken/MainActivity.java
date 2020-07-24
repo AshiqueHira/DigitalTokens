@@ -4,7 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -172,6 +175,18 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
         intent.putExtra("name", moName);
         intent.putExtra("location", moLocation);
         startActivity(intent);
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
+
+        boolean isMetered = conMgr.isActiveNetworkMetered();
+        if (isMetered) {
+            Toast.makeText(this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
     }
 
 }
