@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
 
     List<String> list = new ArrayList<>();
 
+    CheckNetwork myNetwork = new CheckNetwork(this);
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -71,6 +73,10 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("itoken");
 
+        myNetwork.isOnline();
+        if (!myNetwork.isNetworkConnected) {
+            Toast.makeText(this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
+        }
         myRecyclerView = findViewById(R.id.recyclerView);
         myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -177,16 +183,6 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
         startActivity(intent);
     }
 
-    public boolean isOnline() {
-        ConnectivityManager conMgr = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-
-        boolean isMetered = conMgr.isActiveNetworkMetered();
-        if (isMetered) {
-            Toast.makeText(this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return false;
-    }
 
 }
