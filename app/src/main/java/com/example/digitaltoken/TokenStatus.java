@@ -129,7 +129,7 @@ public class TokenStatus extends AppCompatActivity {
         audioPlayer = MediaPlayer.create(this, R.raw.alarm);
 
         start();
-        Toast.makeText(this, userid, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, userid, Toast.LENGTH_SHORT).show();
 
         userDatabaseReference = FirebaseDatabase.getInstance().getReference("Messages");
 
@@ -169,7 +169,6 @@ public class TokenStatus extends AppCompatActivity {
 
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

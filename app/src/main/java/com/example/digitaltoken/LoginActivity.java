@@ -19,6 +19,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -27,10 +30,12 @@ public class LoginActivity extends AppCompatActivity {
     EditText passwordEditText;
 
     FirebaseAuth firebaseAuth;
-
+    DatabaseReference usersDataReference;
+    FirebaseUser firebaseUser;
     ProgressBar progressBar;
 
     String inputEmail;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,9 @@ public class LoginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
 
         progressBar = findViewById(R.id.progressBar);
+
+        usersDataReference = FirebaseDatabase.getInstance().getReference("Users");
+
 
         firebaseAuth = FirebaseAuth.getInstance();
 

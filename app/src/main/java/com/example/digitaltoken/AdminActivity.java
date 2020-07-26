@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -135,7 +136,6 @@ public class AdminActivity extends AppCompatActivity {
 
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
@@ -150,6 +150,7 @@ public class AdminActivity extends AppCompatActivity {
         counterEditText = new EditText(this);
         counterEditText.setHint("Enter the Count value here");
         counterEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
+        counterEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
 
         notesEditText = new EditText(this);
         notesEditText.setHint("Enter the Notes here");
@@ -177,13 +178,18 @@ public class AdminActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                counterTextView.setText(counterEditText.getText());
+
                 value = counterEditText.getText().toString();
+                if (TextUtils.isEmpty(value)) {
+                    value = "0";
+                }
+                counterTextView.setText(value);
                 count = Integer.parseInt(value);
 
                 // value to be passed to firebase
                 counter = value;
                 updateDatas();
+
             }
         });
 
@@ -238,23 +244,27 @@ public class AdminActivity extends AppCompatActivity {
 
     public void plusOne(View view) {
 
-        count += 1;
-        counterTextView.setText(Integer.toString(count));
+        if (count != 999) {
+            count += 1;
+            counterTextView.setText(Integer.toString(count));
 
-        /// value to be passed to firebase
-        counter = Integer.toString(count);
-        updateDatas();
+            /// value to be passed to firebase
+            counter = Integer.toString(count);
+            updateDatas();
+        }
 
     }
 
     public void minusOne(View view) {
 
-        count -= 1;
-        counterTextView.setText(Integer.toString(count));
+        if (count != -999) {
+            count -= 1;
+            counterTextView.setText(Integer.toString(count));
 
-        /// value to be passed to firebase
-        counter = Integer.toString(count);
-        updateDatas();
+            /// value to be passed to firebase
+            counter = Integer.toString(count);
+            updateDatas();
+        }
     }
 
     // update datas into database.........................

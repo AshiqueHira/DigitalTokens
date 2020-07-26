@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -23,12 +25,14 @@ public class SignUpActivity extends AppCompatActivity {
 
     EditText nameEditText;
 
-    Spinner citySpinner;
-    Spinner townSpinner;
-    Spinner streetSpinner;
-    String myCity = "--Select Your District--";
-    String myTown = "--Select Your Town--";
-    String myStreet = "--Select Your Street--";
+    Spinner districtSpinner;
+    AutoCompleteTextView townACTV;
+    AutoCompleteTextView localityACTV;
+
+    String myDistrict = "--Select Your District--";
+    String myTown = "";
+    String myLocality = "";
+    String location = "";
     boolean errorToast = true;
 
     DatabaseReference usersDataReference;
@@ -67,91 +71,82 @@ public class SignUpActivity extends AppCompatActivity {
         userid = user.getUid();
         nameEditText = findViewById(R.id.nameEditText);
 
+        townACTV = findViewById(R.id.townACTV);
+        localityACTV = findViewById(R.id.streetACTV);
+        districtSpinner = findViewById(R.id.districtSpinner);
 
-        citySpinner = findViewById(R.id.citySpinner);
-        townSpinner = findViewById(R.id.townSpinner);
-        streetSpinner = findViewById(R.id.streetSpinner);
+        final String[] district = {"--Select Your District--", "Alappuzha", "Ernakulam", "Idukki",
+                "Kannur", "Kasaragod", "Kollam", "Kottayam", "Kozhikkode", "Malappuram", "Palakkad",
+                "Pathanamthitta", "Thiruvananthapuram", "Thrissur", "Wayanad"};
 
-        final String city[] = {"--Select Your District--", "Kozhikkode"};
+        final String[] towns = {"--Select Your Town--", "Adoor", "Alathur", "Aluva", "Ambalapuzha", "Attingal",
+                "Chalakudy", "Changanasserry", "Chathannoor", "Chavakkad", "Chengannur", "Cherthala",
+                "Chirayinkeezhu", "Chittur", "Devikulam", "Eranad", "Ernakulam", "Fort Kochi", "Haripad",
+                "Hosdurg", "Idukki", "Irinjalakuda", "Iritty", "Kalpetta", "Kanayannur", "Kanjirappally",
+                "Kannur", "Karthikappally", "Karunagappally", "Kasaragod", "Kattakada", "Kochi",
+                "Kodungallur", "Kollam", "Kondotty", "Konni", "Kothamangalam", "Kottarakkara",
+                "Kottayam", "Koyilandy", "Kozhencherry", "Kozhikode", "Kunnamkulam", "Kunnathunad",
+                "Kunnathur", "Kuttanad", "Mallappally", "Mananthavady", "Manjeri", "Manjeshwaram",
+                "Mankombu", "Mannarkkad", "Mavelikkara", "Meenachil", "Mukundapuram", "Muvattupuzha",
+                "Nedumangad", "Nedumkandam", "Neyyattinkara", "Nilambur", "North Paravur", "Ottappalam",
+                "Painavu", "Palai", "Palakkad", "Paravur", "Pathanamthitta", "Pathanapuram", "Pattambi",
+                "Payyanur", "Peermade", "Perinthalmanna", "Perumbavoor", "Ponnani", "Punalur", "Ranni",
+                "Sasthamkotta", "Sultan Battery", "Thalapilly", "Thalassery", "Thalipparamba",
+                "Thamarassery", "Thiruvalla", "Thiruvananthapuram", "Thodupuzha", "Thrissur",
+                "Tirur", "Tirurangadi", "Udumbanchola", "Uppala", "Vaikom", "Varkala", "Vatakara",
+                "Vellarikundu", "Vythiri", "Wadakkancheri"};
 
-        final String kozhikkodeCity[] = {"--Select Your Town--", "vadakara", "Nadapuram"};
-        final String vadakaraTown[] = {"--Select Your Street--", "Orkkateri", "vellikulangara"};
-        final String nadapuramTown[] = {"--Select Your Street--", "Edacheri", "Purameri"};
+        final String[] localities = {"--Select Your Street--", "Orkkateri", "vellikulangara"};
 
-        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, city);
-        citySpinner.setAdapter(cityAdapter);
+        ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, district);
+        districtSpinner.setAdapter(cityAdapter);
 
-        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        ArrayAdapter<String> townAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, towns);
+        townACTV.setAdapter(townAdapter);
+        townACTV.getCompletionHint();
+        townACTV.setThreshold(1);
+
+        ArrayAdapter<String> localityAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, localities);
+        localityACTV.setAdapter(localityAdapter);
+        localityACTV.getCompletionHint();
+        localityACTV.setThreshold(1);
+
+        districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                myCity = city[position];
-                Toast.makeText(SignUpActivity.this, myCity, Toast.LENGTH_SHORT).show();
-
-                if (position == 1) {
-                    ArrayAdapter<String> townAdapter = new ArrayAdapter<String>(SignUpActivity.this, android.R.layout.simple_spinner_dropdown_item, kozhikkodeCity);
-                    townSpinner.setAdapter(townAdapter);
-
-                }
-                townSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        myTown = kozhikkodeCity[position];
-                        Toast.makeText(SignUpActivity.this, myTown, Toast.LENGTH_SHORT).show();
-                        if (position == 1) {
-                            ArrayAdapter<String> streetAdapter = new ArrayAdapter<String>(SignUpActivity.this, android.R.layout.simple_spinner_dropdown_item, vadakaraTown);
-                            streetSpinner.setAdapter(streetAdapter);
-
-                        } else if (position == 2) {
-                            ArrayAdapter<String> streetAdapter = new ArrayAdapter<String>(SignUpActivity.this, android.R.layout.simple_spinner_dropdown_item, nadapuramTown);
-                            streetSpinner.setAdapter(streetAdapter);
-                        }
-                        streetSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                myStreet = streetSpinner.getSelectedItem().toString();
-                                Toast.makeText(SignUpActivity.this, myStreet, Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
-
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
+                myDistrict = district[position];
+                Toast.makeText(SignUpActivity.this, myDistrict, Toast.LENGTH_SHORT).show();
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
 
+
     }
 
-    String location = myCity + " " + myTown + " " + myStreet;
     public void launchButton(View view) {
 
-        if (myCity.equals("--Select Your District--") || myTown.equals("--Select Your Town--") || myStreet.equals("--Select Your Street--")) {
+        myTown = townACTV.getText().toString();
+        myLocality = localityACTV.getText().toString();
+
+        if (myDistrict.equals("--Select Your District--") || TextUtils.isEmpty(myTown) || TextUtils.isEmpty(myLocality)) {
             Toast.makeText(this, "Please Fill your Location details completly", Toast.LENGTH_LONG).show();
 
         } else {
-            Toast.makeText(this, myCity + " " + myTown + " " + myStreet, Toast.LENGTH_SHORT).show();
-            location = myStreet + " " + myTown + " " + myCity;
+
+            Toast.makeText(this, myDistrict + " " + myTown + " " + myLocality, Toast.LENGTH_SHORT).show();
+            location = myLocality + ", " + myTown + ", " + myDistrict;
             addUsers();
-            Intent intento = new Intent(getApplicationContext(), AdminActivity.class);
+            Intent intento = new Intent(SignUpActivity.this, AdminActivity.class);
             intento.putExtra(userName, "userName");
             intento.putExtra(userEmail, "userEmail");
             intento.putExtra(location, "location");
             intento.putExtra(userBusiness, "userBusiness");
             intento.putExtra(userPhone, "userPhone");
             startActivity(intento);
-
+            finish();
         }
 
     }

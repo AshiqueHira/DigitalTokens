@@ -159,6 +159,7 @@ public class TypeActivity extends AppCompatActivity {
 
 
                             startActivity(intented);
+                            finish();
 
 
                         } else {
