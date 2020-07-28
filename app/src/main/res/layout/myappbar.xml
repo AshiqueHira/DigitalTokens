@@ -6,7 +6,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="#2C8DDA"
+    android:background="#1D476A"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     android:id="@+id/myActionBar">
 

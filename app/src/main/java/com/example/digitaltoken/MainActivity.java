@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
     private ArrayList<MyModel> models = new ArrayList<>();
     private RecyclerAdapter myRecyclerAdapter;
 
-    EditText searchEditText;
 
     DatabaseReference dataReference;
     FirebaseUser firebaseUser;
@@ -85,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
 
         myRecyclerAdapter.notifyDataSetChanged();
 
-        searchEditText = findViewById(R.id.searchEditText);
 
         dataReference = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -166,6 +164,8 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
             startActivity(intent);
 
             return true;
+        } else if (item.getItemId() == R.id.search) {
+            
         }
         return false;
     }
