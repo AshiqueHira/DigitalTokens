@@ -164,6 +164,8 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
             startActivity(intent);
 
             return true;
+        } else if (item.getItemId() == R.id.search) {
+            
         }
         return false;
     }
