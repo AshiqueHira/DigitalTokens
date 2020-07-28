@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements CardClickListner {
+public class MainActivity extends AppCompatActivity implements CardClickListner, SearchView.OnQueryTextListener {
 
     Toolbar toolbar;
 
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
         menuInflater.inflate(R.menu.main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,7 +167,8 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
 
             return true;
         } else if (item.getItemId() == R.id.search) {
-            
+            SearchView searchView = (SearchView) item.getActionView();
+            searchView.setOnQueryTextListener(this);
         }
         return false;
     }
@@ -184,5 +187,24 @@ public class MainActivity extends AppCompatActivity implements CardClickListner 
     }
 
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
 
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        String userInput = newText.toLowerCase();
+        List<MyModel> newList = new ArrayList<>();
+
+        for (MyModel name : models) {
+            if (name.getMyTitle().toLowerCase().contains(userInput)) {
+                newList.add(name);
+            } else if (name.getMyDisc().toLowerCase().contains(userInput)) {
+                newList.add(name);
+            }
+        }
+        myRecyclerAdapter.updateList(newList);
+        return false;
+    }
 }
