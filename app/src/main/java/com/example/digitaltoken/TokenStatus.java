@@ -5,12 +5,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PixelFormat;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 
@@ -18,11 +20,13 @@ import android.os.SystemClock;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
@@ -68,7 +72,6 @@ public class TokenStatus extends AppCompatActivity {
     DatabaseReference userDatabaseReference;
     MediaPlayer audioPlayer;
 
-
     private boolean isRunning = false;
     boolean callingTwice = false;
     boolean referenceNumBol = false;
@@ -76,17 +79,13 @@ public class TokenStatus extends AppCompatActivity {
     boolean stopthree = false;
     boolean noCalculations = false;
 
-
     SharedPreferences alarmPreferences;
     SharedPreferences yourTokenPreferences;
 
     int savedAlarmToken;
     int savedYourToken;
 
-
     ArrayList<Integer> times = new ArrayList<Integer>();
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -310,6 +309,7 @@ public class TokenStatus extends AppCompatActivity {
 
     public void dismissAlarm() {
 
+
         AlertDialog dismissDialog = new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_lock_idle_alarm)
                 .setTitle("Dismiss the Alarm")
@@ -324,6 +324,7 @@ public class TokenStatus extends AppCompatActivity {
 
     }
 
+
     public void ringAlarm() {
         if (savedAlarmToken == 0) {
 
@@ -336,7 +337,20 @@ public class TokenStatus extends AppCompatActivity {
             audioPlayer.setScreenOnWhilePlaying(true);
             savedAlarmToken = 0;
             dismissAlarm();
+            startService();
+
         }
+    }
+
+    public void startService() {
+        Intent serviceIntent = new Intent(this, ForgroundService.class);
+        serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android");
+        ContextCompat.startForegroundService(this, serviceIntent);
+    }
+
+    public void stopService() {
+        Intent serviceIntent = new Intent(this, ForgroundService.class);
+        stopService(serviceIntent);
     }
 
     // these three are for estimated time calculations that is seconds
