@@ -25,7 +25,6 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.
 
         this.onCardClickListener = onCardClickListener;
         itemView.setOnClickListener(this);
-
     }
 
     @Override

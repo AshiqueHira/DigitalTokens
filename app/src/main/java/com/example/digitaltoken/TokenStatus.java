@@ -5,24 +5,37 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.PixelFormat;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.os.SystemClock;
+import android.os.Vibrator;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
@@ -35,6 +48,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
@@ -42,6 +56,7 @@ import java.util.ArrayList;
 
 public class TokenStatus extends AppCompatActivity {
 
+    private static final String CHANNEL_ID = "myChannel";
     Toolbar toolbar;
     TextView timingTV;
     TextView notificationTV;
@@ -58,6 +73,7 @@ public class TokenStatus extends AppCompatActivity {
     String alarmToken = "0";
     int alarmIntToken = 0;
     String heading = " ";
+    String description = " ";
     String myToken = "0";
     String sAvgToken = "0";
 
@@ -68,7 +84,6 @@ public class TokenStatus extends AppCompatActivity {
     DatabaseReference userDatabaseReference;
     MediaPlayer audioPlayer;
 
-
     private boolean isRunning = false;
     boolean callingTwice = false;
     boolean referenceNumBol = false;
@@ -76,18 +91,25 @@ public class TokenStatus extends AppCompatActivity {
     boolean stopthree = false;
     boolean noCalculations = false;
 
-
     SharedPreferences alarmPreferences;
     SharedPreferences yourTokenPreferences;
+    SharedPreferences userIdPreferences;
+    SharedPreferences headingPreferences;
+    SharedPreferences discPreferences;
+
+    String alarmKey;
+    String tokenKey;
+    String uidKey;
+    String headingKey;
+    String discKey;
 
     int savedAlarmToken;
     int savedYourToken;
 
+    SwipeRefreshLayout swipeRefreshLayout;
 
     ArrayList<Integer> times = new ArrayList<Integer>();
-
-
-
+    CheckNetwork network = new CheckNetwork(this);
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -104,18 +126,25 @@ public class TokenStatus extends AppCompatActivity {
         toolbar = findViewById(R.id.myActionBar);
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
+
         heading = intent.getStringExtra("name");
-        getSupportActionBar().setTitle(heading);
-        String description = intent.getStringExtra("location");
-        getSupportActionBar().setSubtitle(description);
+        description = intent.getStringExtra("location");
         userid = intent.getStringExtra("userId");
+
+        getSupportActionBar().setTitle(heading);
+        getSupportActionBar().setSubtitle(description);
+
+        swipeRefreshLayout = findViewById(R.id.statusRefresh);
+        network.myNetworkCheck();
 
         alarmPreferences = this.getSharedPreferences("com.example.digitaltoken", Context.MODE_PRIVATE);
         yourTokenPreferences = this.getSharedPreferences("com.example.digitaltoken", Context.MODE_PRIVATE);
 
+        alarmKey = userid + "alarm";
+        tokenKey = userid + "token";
 
-        savedYourToken = yourTokenPreferences.getInt("mToken", 0);
-        savedAlarmToken = alarmPreferences.getInt("mAlarm", 0);
+        savedYourToken = yourTokenPreferences.getInt(tokenKey, 0);
+        savedAlarmToken = alarmPreferences.getInt(alarmKey, 0);
 
         counterTV = findViewById(R.id.counterTV);
         timingTV = findViewById(R.id.timingTV);
@@ -123,15 +152,14 @@ public class TokenStatus extends AppCompatActivity {
         yourTokenTV = findViewById(R.id.myTokenTV);
         estimatedTv = findViewById(R.id.estimatedTV);
         oneTokenTV = findViewById(R.id.oneTokenTv);
-
         yourTokenTV.setText(String.valueOf(savedYourToken));
 
         audioPlayer = MediaPlayer.create(this, R.raw.alarm);
 
         start();
-        //Toast.makeText(this, userid, Toast.LENGTH_SHORT).show();
 
         userDatabaseReference = FirebaseDatabase.getInstance().getReference("Messages");
+        userDatabaseReference.keepSynced(true);
 
         if (!userid.equals("A")) {
             userDatabaseReference.child(userid).addValueEventListener(new ValueEventListener() {
@@ -168,6 +196,22 @@ public class TokenStatus extends AppCompatActivity {
             });
 
         }
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                network.myNetworkCheck();
+                if (!CheckNetwork.isNetworkConnected) {
+                    Toast.makeText(TokenStatus.this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
+                } else {
+                    userDatabaseReference.keepSynced(true);
+                }
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+
+        });
     }
 
     @Override
@@ -224,7 +268,7 @@ public class TokenStatus extends AppCompatActivity {
                             } else {
                                 myIntToken = Integer.parseInt(myToken);
                                 savedYourToken = myIntToken;
-                                yourTokenPreferences.edit().putInt("mToken", savedYourToken).apply();
+                                yourTokenPreferences.edit().putInt(tokenKey, savedYourToken).apply();
                                 yourTokenTV.setText(String.valueOf(savedYourToken));
                                 start();   // for setting the estimated time.
                                 dialog.dismiss();
@@ -249,8 +293,8 @@ public class TokenStatus extends AppCompatActivity {
                 stopthree = true;
                 savedYourToken = 0;
                 savedAlarmToken = 0;
-                yourTokenPreferences.edit().putInt("mToken", savedYourToken).apply();
-                alarmPreferences.edit().putInt("mAlarm", savedAlarmToken).apply();
+                yourTokenPreferences.edit().putInt(tokenKey, savedYourToken).apply();
+                alarmPreferences.edit().putInt(alarmKey, savedAlarmToken).apply();
 
                 yourTokenTV.setText(String.valueOf(savedYourToken));
                 estimatedTv.setText(".....");
@@ -297,7 +341,7 @@ public class TokenStatus extends AppCompatActivity {
                                 alarmEditText.setError("Invalid Enter ! Please enter lesser number");
                             } else {
                                 savedAlarmToken = Integer.parseInt(alarmToken);
-                                alarmPreferences.edit().putInt("mAlarm", savedAlarmToken).apply();
+                                alarmPreferences.edit().putInt(alarmKey, savedAlarmToken).apply();
                                 alarmBuilder.dismiss();
                             }
                         }
@@ -310,7 +354,7 @@ public class TokenStatus extends AppCompatActivity {
 
     public void dismissAlarm() {
 
-        AlertDialog dismissDialog = new AlertDialog.Builder(this)
+        AlertDialog.Builder dismissDialog = new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_lock_idle_alarm)
                 .setTitle("Dismiss the Alarm")
                 .setPositiveButton("Dismiss", new DialogInterface.OnClickListener() {
@@ -318,11 +362,16 @@ public class TokenStatus extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int i) {
                         audioPlayer.pause();
                         audioPlayer.seekTo(0);
+                        //stopService();
                     }
-                })
-                .show();
-
+                });
+        try {
+            dismissDialog.show();
+        } catch (WindowManager.BadTokenException e) {
+            Log.e("the window token is", e.toString());
+        }
     }
+
 
     public void ringAlarm() {
         if (savedAlarmToken == 0) {
@@ -332,11 +381,62 @@ public class TokenStatus extends AppCompatActivity {
         } else if (countIntDB == 0) {
 
         } else if ((savedYourToken - savedAlarmToken) == countIntDB) {
-            audioPlayer.start();
-            audioPlayer.setScreenOnWhilePlaying(true);
+            //audioPlayer.start();
+            //audioPlayer.setScreenOnWhilePlaying(true);
             savedAlarmToken = 0;
-            dismissAlarm();
+            alarmPreferences.edit().putInt(alarmKey, savedAlarmToken).apply();
+            notificationPops();
+
+
         }
+    }
+
+    public void notificationPops() {
+
+        Intent intent = new Intent(this, TokenStatus.class);
+
+        intent.putExtra("userId", userid);
+        intent.putExtra("name", heading);
+        intent.putExtra("location", description);
+
+        createNotificationChannel();
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_access_alarm_black_24dp)
+                .setContentTitle("Token Reminder")
+                .setContentText("Dismiss the Reminder by Clicking this")
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setVibrate(new long[]{100, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000})
+                // Set the intent that will fire when the user taps the notification
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(0, builder.build());
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "myChannel",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            serviceChannel.enableVibration(true);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
+    }
+
+    public void startService() {
+        Intent serviceIntent = new Intent(getApplicationContext(), ForgroundService.class);
+        serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android");
+        ContextCompat.startForegroundService(this, serviceIntent);
+    }
+    public void stopService() {
+        Intent serviceIntent = new Intent(getApplicationContext(), ForgroundService.class);
+        stopService(serviceIntent);
     }
 
     // these three are for estimated time calculations that is seconds

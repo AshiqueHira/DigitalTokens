@@ -48,16 +48,17 @@ public class LoginActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
 
         progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
 
         usersDataReference = FirebaseDatabase.getInstance().getReference("Users");
 
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        if (firebaseAuth.getCurrentUser() != null) {
+        /*if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), AdminActivity.class));
             finish();
-        }
+        }*/
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {

@@ -72,6 +72,7 @@ public class TypeActivity extends AppCompatActivity {
 
 
         progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.INVISIBLE);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
