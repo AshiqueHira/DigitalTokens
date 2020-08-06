@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,7 +22,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -42,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
     private ArrayList<MyModel> models = new ArrayList<>();
     private RecyclerAdapter myRecyclerAdapter;
 
+    ShimmerFrameLayout shimmerFrameLayout;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     DatabaseReference dataReference;
     FirebaseUser firebaseUser;
@@ -74,11 +80,19 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("itoken");
 
-        myNetwork.isOnline();
         if (!myNetwork.isNetworkConnected) {
             Toast.makeText(this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
         }
+
+        shimmerFrameLayout = findViewById(R.id.myShimmo);
+        //swipeRefreshLayout = findViewById(R.id.swipeRefresh);
         myRecyclerView = findViewById(R.id.recyclerView);
+
+
+        myRecyclerView.setVisibility(View.INVISIBLE);
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
+        shimmerFrameLayout.startShimmerAnimation();
+
         myRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         myRecyclerAdapter = new RecyclerAdapter(models, this);
@@ -86,6 +100,24 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
 
         myRecyclerAdapter.notifyDataSetChanged();
 
+
+        /*swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                myRecyclerAdapter.notifyDataSetChanged();
+                if (!CheckNetwork.isNetworkConnected) {
+                    Toast.makeText(MainActivity.this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
+                }
+
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+
+
+            }
+
+        });*/
 
         dataReference = FirebaseDatabase.getInstance().getReference("Users");
 
@@ -152,6 +184,11 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
         m.setMyuid(usersId);
 
         models.add(m);
+        if (!models.isEmpty()) {
+            shimmerFrameLayout.stopShimmerAnimation();
+            shimmerFrameLayout.setVisibility(View.GONE);
+            myRecyclerView.setVisibility(View.VISIBLE);
+        }
 
 
     }
@@ -206,5 +243,17 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
         }
         myRecyclerAdapter.updateList(newList);
         return false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        shimmerFrameLayout.startShimmerAnimation();
+    }
+
+    @Override
+    public void onPause() {
+        shimmerFrameLayout.stopShimmerAnimation();
+        super.onPause();
     }
 }

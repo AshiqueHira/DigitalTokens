@@ -27,11 +27,12 @@ public class ForgroundService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String input = intent.getStringExtra("inputExtra");
         createNotificationChannel();
-        Intent notificationIntent = new Intent(this, TokenStatus.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+        Intent notificationIntent = new Intent(getApplicationContext(), TokenStatus.class);
+        notificationIntent.setFlags(notificationIntent.FLAG_ACTIVITY_NEW_TASK | notificationIntent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(),
                 0, notificationIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Foreground Service")
+                .setContentTitle("Token Remainder")
                 .setContentText(input)
                 .setSmallIcon(R.drawable.ic_access_alarm_black_24dp)
                 .setContentIntent(pendingIntent)

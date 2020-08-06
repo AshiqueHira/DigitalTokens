@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -78,6 +80,9 @@ public class AdminActivity extends AppCompatActivity {
     boolean dbControlBol = false;
     boolean forceStop = false;
 
+    CheckNetwork network = new CheckNetwork(this);
+    SwipeRefreshLayout swipeRefreshLayout;
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,6 +116,9 @@ public class AdminActivity extends AppCompatActivity {
         userid = msg.getUid();
         msgDataReference = FirebaseDatabase.getInstance().getReference("Messages");
 
+        swipeRefreshLayout = findViewById(R.id.adminRefresh);
+        networkUpdateMethod();
+        refreshMethod();
         // calling the DB for only reading the average value
         msgDataReference.child(userid).addValueEventListener(new ValueEventListener() {
             @Override
@@ -231,6 +239,7 @@ public class AdminActivity extends AppCompatActivity {
 
     }
 
+
     public void counterClick(View view) {
 
         counterEditText.setText(counterTextView.getText());
@@ -331,6 +340,33 @@ public class AdminActivity extends AppCompatActivity {
             avg = sum / 7;
             avgToken = String.valueOf(avg);
             Log.e("the counter is", String.valueOf(sevenSetter));
+        }
+    }
+
+    public void refreshMethod() {
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                network.myNetworkCheck();
+                if (!CheckNetwork.isNetworkConnected) {
+                    Toast.makeText(AdminActivity.this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
+                } else {
+                    msgDataReference.keepSynced(true);
+                }
+                if (swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+            }
+
+        });
+    }
+
+    public void networkUpdateMethod() {
+        network.myNetworkCheck();
+        if (!CheckNetwork.isNetworkConnected) {
+            Toast.makeText(AdminActivity.this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
+        } else {
+            msgDataReference.keepSynced(true);
         }
     }
 }

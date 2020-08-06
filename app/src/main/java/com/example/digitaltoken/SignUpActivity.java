@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -28,6 +29,8 @@ public class SignUpActivity extends AppCompatActivity {
     Spinner districtSpinner;
     AutoCompleteTextView townACTV;
     AutoCompleteTextView localityACTV;
+
+    ProgressBar progressBar;
 
     String myDistrict = "--Select Your District--";
     String myTown = "";
@@ -74,6 +77,9 @@ public class SignUpActivity extends AppCompatActivity {
         townACTV = findViewById(R.id.townACTV);
         localityACTV = findViewById(R.id.streetACTV);
         districtSpinner = findViewById(R.id.districtSpinner);
+
+        progressBar = findViewById(R.id.progressBarr);
+        progressBar.setVisibility(View.INVISIBLE);
 
         final String[] district = {"--Select Your District--", "Alappuzha", "Ernakulam", "Idukki",
                 "Kannur", "Kasaragod", "Kollam", "Kottayam", "Kozhikkode", "Malappuram", "Palakkad",
@@ -128,6 +134,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void launchButton(View view) {
 
+
         myTown = townACTV.getText().toString();
         myLocality = localityACTV.getText().toString();
 
@@ -136,6 +143,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         } else {
 
+            progressBar.setVisibility(View.VISIBLE);
             Toast.makeText(this, myDistrict + " " + myTown + " " + myLocality, Toast.LENGTH_SHORT).show();
             location = myLocality + ", " + myTown + ", " + myDistrict;
             addUsers();
@@ -148,6 +156,7 @@ public class SignUpActivity extends AppCompatActivity {
             startActivity(intento);
             finish();
         }
+        progressBar.setVisibility(View.GONE);
 
     }
 
