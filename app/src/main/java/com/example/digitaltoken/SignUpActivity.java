@@ -147,6 +147,15 @@ public class SignUpActivity extends AppCompatActivity {
         myTown = townACTV.getText().toString();
         myLocality = localityACTV.getText().toString();
 
+        if (TextUtils.isEmpty(myTown)) {
+            townACTV.setError("Enter Your Town");
+            return;
+        }
+        if (TextUtils.isEmpty(myLocality)) {
+            localityACTV.setError("Enter Your Locality");
+            return;
+        }
+
         if (myDistrict.equals("--Select Your District--") || TextUtils.isEmpty(myTown) || TextUtils.isEmpty(myLocality)) {
             Toast.makeText(this, "Please Fill your Location details completly", Toast.LENGTH_LONG).show();
 

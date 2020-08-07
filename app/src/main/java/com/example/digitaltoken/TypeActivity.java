@@ -38,9 +38,6 @@ public class TypeActivity extends AppCompatActivity {
     EditText confirmEditText;
     EditText phoneEditText;
 
-
-
-
     ProgressBar progressBar;
     ///////////  initialisation
 
@@ -76,7 +73,7 @@ public class TypeActivity extends AppCompatActivity {
 
         final List<String> list = new ArrayList<>();
 
-        list.add("Select Business Type");
+        list.add("Select Facility Type");
         list.add("Ration Shop");
         list.add("Doctor(Self Service)");
         list.add("Sales Shop");
@@ -147,7 +144,6 @@ public class TypeActivity extends AppCompatActivity {
                 intented.putExtra("bussinessType", businessType);
                 intented.putExtra("password", password);
                 startActivity(intented);
-
 
             }
         });
