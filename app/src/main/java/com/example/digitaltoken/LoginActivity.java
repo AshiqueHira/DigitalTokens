@@ -35,7 +35,6 @@ public class LoginActivity extends AppCompatActivity {
     ProgressBar progressBar;
 
     String inputEmail;
-    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +54,10 @@ public class LoginActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
 
-        /*if (firebaseAuth.getCurrentUser() != null) {
+        if (firebaseAuth.getCurrentUser() != null) {
             startActivity(new Intent(getApplicationContext(), AdminActivity.class));
             finish();
-        }*/
+        }
 
 
         loginButton.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +82,6 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(LoginActivity.this, "The User is Successfully Created", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), AdminActivity.class));
                         } else {
                             Toast.makeText(LoginActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
@@ -93,8 +91,6 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         });
-
-
     }
 
     public void login(View view) {

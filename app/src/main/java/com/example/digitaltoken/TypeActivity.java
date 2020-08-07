@@ -38,17 +38,16 @@ public class TypeActivity extends AppCompatActivity {
     EditText confirmEditText;
     EditText phoneEditText;
 
-    EditText clinicEditText;
 
 
 
     ProgressBar progressBar;
     ///////////  initialisation
 
-    String businessType = "Select Business Type";
-
+    String businessType = "Select Facility Type";
     String email = "B";
     String phone = "B";
+    String password = "B";
 
     private boolean mVerificationInProgress = false;
     private String mVerificationId;
@@ -109,7 +108,7 @@ public class TypeActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 email = emailEditText.getText().toString().trim();
-                String password = passwordEditText.getText().toString().trim();
+                password = passwordEditText.getText().toString().trim();
 
                 String confirm = confirmEditText.getText().toString().trim();
                 phone = phoneEditText.getText().toString().trim();
@@ -133,8 +132,8 @@ public class TypeActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (businessType.equals("Select Business Type")) {
-                    Toast.makeText(TypeActivity.this, "Please Select the Business Type", Toast.LENGTH_LONG).show();
+                if (businessType.equals("Select Facility Type")) {
+                    Toast.makeText(TypeActivity.this, "Please Select the Facility Type", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -147,10 +146,7 @@ public class TypeActivity extends AppCompatActivity {
                 intented.putExtra("phoneNumber", phone);
                 intented.putExtra("bussinessType", businessType);
                 intented.putExtra("password", password);
-
-
                 startActivity(intented);
-                finish();
 
 
             }

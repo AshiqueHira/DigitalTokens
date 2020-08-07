@@ -139,8 +139,6 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     public void launchButton(View view) {
@@ -173,10 +171,7 @@ public class SignUpActivity extends AppCompatActivity {
                     }
                 }
             });
-
         }
-        progressBar.setVisibility(View.GONE);
-
     }
 
     public void addUsers() {
