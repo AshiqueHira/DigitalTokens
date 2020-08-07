@@ -40,7 +40,7 @@ public class TypeActivity extends AppCompatActivity {
 
     EditText clinicEditText;
 
-    FirebaseAuth firebaseAuth;
+
 
     ProgressBar progressBar;
     ///////////  initialisation
@@ -74,7 +74,6 @@ public class TypeActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
-        firebaseAuth = FirebaseAuth.getInstance();
 
         final List<String> list = new ArrayList<>();
 
@@ -108,10 +107,6 @@ public class TypeActivity extends AppCompatActivity {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //String selectedItem = dropdownmenu.getSelectedItem().toString();
-                //Intent intent = new Intent(getApplicationContext(),SignUpActivity.class);
-                //intent.putExtra("businessType",selectedItem);
 
                 email = emailEditText.getText().toString().trim();
                 String password = passwordEditText.getText().toString().trim();
@@ -147,28 +142,16 @@ public class TypeActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 // register the user in firebase
 
-                firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(TypeActivity.this, "The User is Successfully Created", Toast.LENGTH_SHORT).show();
-
-                            Intent intented = new Intent(getApplicationContext(), SignUpActivity.class);
-                            intented.putExtra("email", email);
-                            intented.putExtra("phoneNumber", phone);
-                            intented.putExtra("bussinessType", businessType);
+                Intent intented = new Intent(getApplicationContext(), SignUpActivity.class);
+                intented.putExtra("email", email);
+                intented.putExtra("phoneNumber", phone);
+                intented.putExtra("bussinessType", businessType);
+                intented.putExtra("password", password);
 
 
-                            startActivity(intented);
-                            finish();
+                startActivity(intented);
+                finish();
 
-
-                        } else {
-                            Toast.makeText(TypeActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    }
-                });
 
             }
         });

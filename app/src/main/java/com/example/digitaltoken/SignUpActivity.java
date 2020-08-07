@@ -1,5 +1,6 @@
 package com.example.digitaltoken;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -14,6 +15,10 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.internal.SignInHubActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -36,11 +41,12 @@ public class SignUpActivity extends AppCompatActivity {
     String myTown = "";
     String myLocality = "";
     String location = "";
-    boolean errorToast = true;
 
     DatabaseReference usersDataReference;
     DatabaseReference msgDataReference;
     FirebaseUser user;
+    FirebaseAuth firebaseAuth;
+    ProgressBar progressBar;
 
     //////////////////////// initialise strings and stuffs
     String userid = "A";
@@ -48,6 +54,7 @@ public class SignUpActivity extends AppCompatActivity {
     String userPhone = "A";
     String userBusiness = "A";
     String userName = "A";
+    String password = "A";
 
     String counter = "0";
     String timings = "...";
@@ -66,12 +73,16 @@ public class SignUpActivity extends AppCompatActivity {
         userEmail = intent.getStringExtra("email");
         userPhone = intent.getStringExtra("phoneNumber");
         userBusiness = intent.getStringExtra("bussinessType");
+        password = intent.getStringExtra("password");
+
 
         Toast.makeText(this, userEmail + "  " + userPhone + "  " + userBusiness, Toast.LENGTH_LONG).show();
-        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        firebaseAuth = FirebaseAuth.getInstance();
         usersDataReference = FirebaseDatabase.getInstance().getReference("Users");
         msgDataReference = FirebaseDatabase.getInstance().getReference("Messages");
-        userid = user.getUid();
+
+
         nameEditText = findViewById(R.id.nameEditText);
 
         townACTV = findViewById(R.id.townACTV);
@@ -146,15 +157,23 @@ public class SignUpActivity extends AppCompatActivity {
             progressBar.setVisibility(View.VISIBLE);
             Toast.makeText(this, myDistrict + " " + myTown + " " + myLocality, Toast.LENGTH_SHORT).show();
             location = myLocality + ", " + myTown + ", " + myDistrict;
-            addUsers();
-            Intent intento = new Intent(SignUpActivity.this, AdminActivity.class);
-            intento.putExtra(userName, "userName");
-            intento.putExtra(userEmail, "userEmail");
-            intento.putExtra(location, "location");
-            intento.putExtra(userBusiness, "userBusiness");
-            intento.putExtra(userPhone, "userPhone");
-            startActivity(intento);
-            finish();
+
+            firebaseAuth.createUserWithEmailAndPassword(userEmail, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(SignUpActivity.this, "The User is Successfully Created", Toast.LENGTH_SHORT).show();
+                        user = FirebaseAuth.getInstance().getCurrentUser();
+                        userid = user.getUid();
+                        addUsers();
+
+                    } else {
+                        Toast.makeText(SignUpActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+                }
+            });
+
         }
         progressBar.setVisibility(View.GONE);
 
@@ -166,6 +185,17 @@ public class SignUpActivity extends AppCompatActivity {
         usersDataReference.child(userid).setValue(user);
 
         Message message = new Message(userid, timings, counter, notifications, sAvgToken);
-        msgDataReference.child(userid).setValue(message);
+        msgDataReference.child(userid).setValue(message).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Intent intento = new Intent(SignUpActivity.this, AdminActivity.class);
+                    startActivity(intento);
+                    finish();
+                } else {
+                    Toast.makeText(SignUpActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 }
