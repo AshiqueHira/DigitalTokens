@@ -38,17 +38,13 @@ public class TypeActivity extends AppCompatActivity {
     EditText confirmEditText;
     EditText phoneEditText;
 
-    EditText clinicEditText;
-
-    FirebaseAuth firebaseAuth;
-
     ProgressBar progressBar;
     ///////////  initialisation
 
-    String businessType = "Select Business Type";
-
+    String businessType = "Select Facility Type";
     String email = "B";
     String phone = "B";
+    String password = "B";
 
     private boolean mVerificationInProgress = false;
     private String mVerificationId;
@@ -74,11 +70,10 @@ public class TypeActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
 
-        firebaseAuth = FirebaseAuth.getInstance();
 
         final List<String> list = new ArrayList<>();
 
-        list.add("Select Business Type");
+        list.add("Select Facility Type");
         list.add("Ration Shop");
         list.add("Doctor(Self Service)");
         list.add("Sales Shop");
@@ -109,12 +104,8 @@ public class TypeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                //String selectedItem = dropdownmenu.getSelectedItem().toString();
-                //Intent intent = new Intent(getApplicationContext(),SignUpActivity.class);
-                //intent.putExtra("businessType",selectedItem);
-
                 email = emailEditText.getText().toString().trim();
-                String password = passwordEditText.getText().toString().trim();
+                password = passwordEditText.getText().toString().trim();
 
                 String confirm = confirmEditText.getText().toString().trim();
                 phone = phoneEditText.getText().toString().trim();
@@ -138,8 +129,8 @@ public class TypeActivity extends AppCompatActivity {
                     return;
                 }
 
-                if (businessType.equals("Select Business Type")) {
-                    Toast.makeText(TypeActivity.this, "Please Select the Business Type", Toast.LENGTH_LONG).show();
+                if (businessType.equals("Select Facility Type")) {
+                    Toast.makeText(TypeActivity.this, "Please Select the Facility Type", Toast.LENGTH_LONG).show();
                     return;
                 }
 
@@ -147,28 +138,12 @@ public class TypeActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 // register the user in firebase
 
-                firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(TypeActivity.this, "The User is Successfully Created", Toast.LENGTH_SHORT).show();
-
-                            Intent intented = new Intent(getApplicationContext(), SignUpActivity.class);
-                            intented.putExtra("email", email);
-                            intented.putExtra("phoneNumber", phone);
-                            intented.putExtra("bussinessType", businessType);
-
-
-                            startActivity(intented);
-                            finish();
-
-
-                        } else {
-                            Toast.makeText(TypeActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    }
-                });
+                Intent intented = new Intent(getApplicationContext(), SignUpActivity.class);
+                intented.putExtra("email", email);
+                intented.putExtra("phoneNumber", phone);
+                intented.putExtra("bussinessType", businessType);
+                intented.putExtra("password", password);
+                startActivity(intented);
 
             }
         });

@@ -2,8 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:title="Set Reminder"
-        android:icon="@drawable/ic_vibration_black_24dp"
+        android:title="Set Alarm"
         android:id="@+id/setAlarm" />
 
 </menu>
