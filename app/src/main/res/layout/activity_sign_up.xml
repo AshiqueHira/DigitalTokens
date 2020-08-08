@@ -42,17 +42,33 @@
         android:layout_marginTop="20dp"
         android:layout_marginEnd="15dp"
         android:ems="10"
-        android:hint="Name(eg: X Bank, Dr. X MBBS,MD)"
         android:inputType="textPersonName"
         android:paddingVertical="20dp"
         android:paddingStart="15dp"
         android:textColor="#000000"
         android:textSize="14sp"
-
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.207"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+    <EditText
+        android:id="@+id/addressEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:paddingVertical="20dp"
+        android:paddingStart="15dp"
+        android:textColor="#000000"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.207"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nameEditText" />
 
     <Button
         android:id="@+id/registerButton2"
@@ -84,7 +100,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameEditText" />
+        app:layout_constraintTop_toBottomOf="@+id/addressEditText" />
 
     <AutoCompleteTextView
         android:id="@+id/townACTV"

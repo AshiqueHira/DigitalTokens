@@ -30,6 +30,7 @@ import java.util.List;
 public class SignUpActivity extends AppCompatActivity {
 
     EditText nameEditText;
+    EditText addressEditText;
 
     Spinner districtSpinner;
     AutoCompleteTextView townACTV;
@@ -55,14 +56,12 @@ public class SignUpActivity extends AppCompatActivity {
     String userBusiness = "A";
     String userName = "A";
     String password = "A";
+    String address = "";
 
     String counter = "0";
     String timings = "...";
     String notifications = "No Notifications Yet";
     String sAvgToken = "0";
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,19 +74,46 @@ public class SignUpActivity extends AppCompatActivity {
         userBusiness = intent.getStringExtra("bussinessType");
         password = intent.getStringExtra("password");
 
-
-        Toast.makeText(this, userEmail + "  " + userPhone + "  " + userBusiness, Toast.LENGTH_LONG).show();
-
         firebaseAuth = FirebaseAuth.getInstance();
         usersDataReference = FirebaseDatabase.getInstance().getReference("Users");
         msgDataReference = FirebaseDatabase.getInstance().getReference("Messages");
 
-
         nameEditText = findViewById(R.id.nameEditText);
-
+        addressEditText = findViewById(R.id.addressEditText);
         townACTV = findViewById(R.id.townACTV);
         localityACTV = findViewById(R.id.streetACTV);
         districtSpinner = findViewById(R.id.districtSpinner);
+
+        addressEditText.setVisibility(View.GONE);
+
+
+        if (userBusiness.equals("Bank")) {
+            nameEditText.setHint("Bank Name");
+        } else if (userBusiness.equals("Doctor(Home Service)")) {
+            nameEditText.setHint("Dr. Name");
+
+        } else if (userBusiness.equals("Doctor(Clinic Service)")) {
+            addressEditText.setVisibility(View.VISIBLE);
+            nameEditText.setHint("Dr. Name");
+            addressEditText.setHint("Clinic Name");
+
+        } else if (userBusiness.equals("Doctor(Hospital Service)")) {
+            addressEditText.setVisibility(View.VISIBLE);
+            nameEditText.setHint("Dr. Name");
+            addressEditText.setHint("Hospital Name");
+
+        } else if (userBusiness.equals("Flour Mill")) {
+            nameEditText.setHint("Title Name");
+
+        } else if (userBusiness.equals("Govt. Hospital")) {
+            nameEditText.setHint("Hospital Name");
+
+        } else if (userBusiness.equals("Ration Shop")) {
+            nameEditText.setHint("Title Name");
+
+        } else if (userBusiness.equals("Sales Shop")) {
+            nameEditText.setHint("Shop Name");
+        }
 
         progressBar = findViewById(R.id.progressBarr);
         progressBar.setVisibility(View.INVISIBLE);
@@ -146,6 +172,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         myTown = townACTV.getText().toString();
         myLocality = localityACTV.getText().toString();
+        address = addressEditText.getText().toString();
 
         if (TextUtils.isEmpty(myTown)) {
             townACTV.setError("Enter Your Town");
@@ -160,11 +187,11 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(this, "Please Fill your Location details completly", Toast.LENGTH_LONG).show();
 
         } else {
-
-            progressBar.setVisibility(View.VISIBLE);
-            Toast.makeText(this, myDistrict + " " + myTown + " " + myLocality, Toast.LENGTH_SHORT).show();
-            location = myLocality + ", " + myTown + ", " + myDistrict;
-
+            if (!TextUtils.isEmpty(address)) {
+                location = address + ", " + myLocality + ", " + myTown;
+            } else {
+                location = myLocality + ", " + myTown + ", " + myDistrict;
+            }
             firebaseAuth.createUserWithEmailAndPassword(userEmail, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {

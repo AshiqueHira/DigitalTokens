@@ -372,7 +372,6 @@ public class TokenStatus extends AppCompatActivity {
         }
     }
 
-
     public void ringAlarm() {
         if (savedAlarmToken == 0) {
 

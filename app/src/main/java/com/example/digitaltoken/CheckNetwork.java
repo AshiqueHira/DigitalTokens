@@ -5,8 +5,12 @@ import android.net.ConnectivityManager;
 import android.net.ConnectivityManager.NetworkCallback;
 import android.net.Network;
 import android.net.NetworkCapabilities;
+import android.net.NetworkInfo;
+import android.net.NetworkRequest;
+import android.os.Build;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class CheckNetwork {
@@ -18,20 +22,51 @@ public class CheckNetwork {
         this.context = context;
     }
 
-    public boolean isOnline() {
-        isNetworkConnected = false;
-        ConnectivityManager connectivityMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        Network[] allNetworks = connectivityMgr.getAllNetworks(); // added in API 21 (Lollipop)
-
-        for (Network network : allNetworks) {
-            NetworkCapabilities networkCapabilities = connectivityMgr.getNetworkCapabilities(network);
-            if (networkCapabilities != null) {
-                if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-                        || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-                        || networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET))
-                    isNetworkConnected = true;
+    public void myNetworkCheck() {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
+            isOnline(context);
+            if (isOnline(context)) {
+                isNetworkConnected = true;
+            } else {
+                isNetworkConnected = false;
             }
+        } else {
+            registerNetworkCallback();
         }
-        return isNetworkConnected;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void registerNetworkCallback() {
+
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkRequest.Builder builder = new NetworkRequest.Builder();
+
+            connectivityManager.registerDefaultNetworkCallback(new ConnectivityManager.NetworkCallback() {
+                                                                   @Override
+                                                                   public void onAvailable(Network network) {
+                                                                       isNetworkConnected = true; // Global Static Variable
+                                                                   }
+
+                                                                   @Override
+                                                                   public void onLost(Network network) {
+                                                                       isNetworkConnected = false; // Global Static Variable
+                                                                   }
+                                                               }
+            );
+        } catch (Exception e) {
+            isNetworkConnected = false;
+        }
+    }
+
+    public boolean isOnline(Context context) {
+
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        //should check null because in airplane mode it will be null
+        return (netInfo != null && netInfo.isConnected());
+
+
     }
 }
