@@ -38,13 +38,12 @@ public class TypeActivity extends AppCompatActivity {
     EditText confirmEditText;
     EditText phoneEditText;
 
-    ProgressBar progressBar;
     ///////////  initialisation
 
     String businessType = "Select Facility Type";
-    String email = "B";
-    String phone = "B";
-    String password = "B";
+    String email = "";
+    String phone = "";
+    String password = "";
 
     private boolean mVerificationInProgress = false;
     private String mVerificationId;
@@ -74,14 +73,14 @@ public class TypeActivity extends AppCompatActivity {
         final List<String> list = new ArrayList<>();
 
         list.add("Select Facility Type");
-        list.add("Ration Shop");
-        list.add("Doctor(Self Service)");
-        list.add("Sales Shop");
-        //list.add("Clinic");
+        list.add("Bank");
+        list.add("Doctor(Home Service)");
+        list.add("Doctor(Clinic Service)");
+        list.add("Doctor(Hospital Service)");
         list.add("Flour Mill");
         list.add("Govt. Hospital");
-        //list.add("Hospital");
-        list.add("Bank");
+        list.add("Ration Shop");
+        list.add("Sales Shop");
 
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -134,9 +133,6 @@ public class TypeActivity extends AppCompatActivity {
                     return;
                 }
 
-
-                progressBar.setVisibility(View.VISIBLE);
-                // register the user in firebase
 
                 Intent intented = new Intent(getApplicationContext(), SignUpActivity.class);
                 intented.putExtra("email", email);

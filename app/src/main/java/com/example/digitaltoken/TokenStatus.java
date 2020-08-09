@@ -93,15 +93,11 @@ public class TokenStatus extends AppCompatActivity {
 
     SharedPreferences alarmPreferences;
     SharedPreferences yourTokenPreferences;
-    SharedPreferences userIdPreferences;
-    SharedPreferences headingPreferences;
-    SharedPreferences discPreferences;
+
 
     String alarmKey;
     String tokenKey;
-    String uidKey;
-    String headingKey;
-    String discKey;
+
 
     int savedAlarmToken;
     int savedYourToken;
@@ -372,7 +368,6 @@ public class TokenStatus extends AppCompatActivity {
         }
     }
 
-
     public void ringAlarm() {
         if (savedAlarmToken == 0) {
 
@@ -408,6 +403,7 @@ public class TokenStatus extends AppCompatActivity {
                 .setContentTitle("Token Reminder")
                 .setContentText("Dismiss the Reminder by Clicking this")
                 .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setVibrate(new long[]{100, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000})
                 // Set the intent that will fire when the user taps the notification
                 .setContentIntent(pendingIntent)
@@ -429,15 +425,6 @@ public class TokenStatus extends AppCompatActivity {
         }
     }
 
-    public void startService() {
-        Intent serviceIntent = new Intent(getApplicationContext(), ForgroundService.class);
-        serviceIntent.putExtra("inputExtra", "Foreground Service Example in Android");
-        ContextCompat.startForegroundService(this, serviceIntent);
-    }
-    public void stopService() {
-        Intent serviceIntent = new Intent(getApplicationContext(), ForgroundService.class);
-        stopService(serviceIntent);
-    }
 
     // these three are for estimated time calculations that is seconds
     @SuppressLint("SetTextI18n")

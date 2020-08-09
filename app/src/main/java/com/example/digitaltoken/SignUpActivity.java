@@ -30,6 +30,7 @@ import java.util.List;
 public class SignUpActivity extends AppCompatActivity {
 
     EditText nameEditText;
+    EditText addressEditText;
 
     Spinner districtSpinner;
     AutoCompleteTextView townACTV;
@@ -55,14 +56,16 @@ public class SignUpActivity extends AppCompatActivity {
     String userBusiness = "A";
     String userName = "A";
     String password = "A";
+    String address = "";
 
     String counter = "0";
     String timings = "...";
     String notifications = "No Notifications Yet";
     String sAvgToken = "0";
 
+    boolean launchGo = true;
 
-
+    CheckNetwork myNetwork = new CheckNetwork(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,19 +78,51 @@ public class SignUpActivity extends AppCompatActivity {
         userBusiness = intent.getStringExtra("bussinessType");
         password = intent.getStringExtra("password");
 
-
-        Toast.makeText(this, userEmail + "  " + userPhone + "  " + userBusiness, Toast.LENGTH_LONG).show();
+        myNetwork.myNetworkCheck();
+        if (!CheckNetwork.isNetworkConnected) {
+            Toast.makeText(this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
+        }
 
         firebaseAuth = FirebaseAuth.getInstance();
         usersDataReference = FirebaseDatabase.getInstance().getReference("Users");
         msgDataReference = FirebaseDatabase.getInstance().getReference("Messages");
 
-
         nameEditText = findViewById(R.id.nameEditText);
-
+        addressEditText = findViewById(R.id.addressEditText);
         townACTV = findViewById(R.id.townACTV);
         localityACTV = findViewById(R.id.streetACTV);
         districtSpinner = findViewById(R.id.districtSpinner);
+
+        addressEditText.setVisibility(View.GONE);
+
+
+        if (userBusiness.equals("Bank")) {
+            nameEditText.setHint("Bank Name");
+        } else if (userBusiness.equals("Doctor(Home Service)")) {
+            nameEditText.setHint("Dr. Name");
+
+        } else if (userBusiness.equals("Doctor(Clinic Service)")) {
+            addressEditText.setVisibility(View.VISIBLE);
+            nameEditText.setHint("Dr. Name");
+            addressEditText.setHint("Clinic Name");
+
+        } else if (userBusiness.equals("Doctor(Hospital Service)")) {
+            addressEditText.setVisibility(View.VISIBLE);
+            nameEditText.setHint("Dr. Name");
+            addressEditText.setHint("Hospital Name");
+
+        } else if (userBusiness.equals("Flour Mill")) {
+            nameEditText.setHint("Title Name");
+
+        } else if (userBusiness.equals("Govt. Hospital")) {
+            nameEditText.setHint("Hospital Name");
+
+        } else if (userBusiness.equals("Ration Shop")) {
+            nameEditText.setHint("Title Name");
+
+        } else if (userBusiness.equals("Sales Shop")) {
+            nameEditText.setHint("Shop Name");
+        }
 
         progressBar = findViewById(R.id.progressBarr);
         progressBar.setVisibility(View.INVISIBLE);
@@ -141,53 +176,68 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    public void launchButton(View view) {
-
-
-        myTown = townACTV.getText().toString();
-        myLocality = localityACTV.getText().toString();
-
-        if (TextUtils.isEmpty(myTown)) {
-            townACTV.setError("Enter Your Town");
-            return;
-        }
-        if (TextUtils.isEmpty(myLocality)) {
-            localityACTV.setError("Enter Your Locality");
-            return;
-        }
-
-        if (myDistrict.equals("--Select Your District--") || TextUtils.isEmpty(myTown) || TextUtils.isEmpty(myLocality)) {
-            Toast.makeText(this, "Please Fill your Location details completly", Toast.LENGTH_LONG).show();
-
+    public void networkMethod() {
+        myNetwork.myNetworkCheck();
+        if (!CheckNetwork.isNetworkConnected) {
+            Toast.makeText(this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
+            launchGo = false;
         } else {
+            launchGo = true;
+        }
+    }
 
-            progressBar.setVisibility(View.VISIBLE);
-            Toast.makeText(this, myDistrict + " " + myTown + " " + myLocality, Toast.LENGTH_SHORT).show();
-            location = myLocality + ", " + myTown + ", " + myDistrict;
+    public void launchButton(View view) {
+        networkMethod();
+        if (launchGo) {
+            launchGo = false;
 
-            firebaseAuth.createUserWithEmailAndPassword(userEmail, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(SignUpActivity.this, "The User is Successfully Created", Toast.LENGTH_SHORT).show();
-                        user = FirebaseAuth.getInstance().getCurrentUser();
-                        userid = user.getUid();
-                        addUsers();
+            myTown = townACTV.getText().toString();
+            myLocality = localityACTV.getText().toString();
+            address = addressEditText.getText().toString();
 
-                    } else {
-                        Toast.makeText(SignUpActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        progressBar.setVisibility(View.GONE);
-                    }
+            if (TextUtils.isEmpty(myTown)) {
+                townACTV.setError("Enter Your Town");
+                return;
+            }
+            if (TextUtils.isEmpty(myLocality)) {
+                localityACTV.setError("Enter Your Locality");
+                return;
+            }
+
+            if (myDistrict.equals("--Select Your District--") || TextUtils.isEmpty(myTown) || TextUtils.isEmpty(myLocality)) {
+                Toast.makeText(this, "Please Fill your Location details completly", Toast.LENGTH_LONG).show();
+
+            } else {
+                if (!TextUtils.isEmpty(address)) {
+                    location = address + ", " + myLocality + ", " + myTown;
+                } else {
+                    location = myLocality + ", " + myTown + ", " + myDistrict;
                 }
-            });
+                firebaseAuth.createUserWithEmailAndPassword(userEmail, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(SignUpActivity.this, "The User is Successfully Created", Toast.LENGTH_SHORT).show();
+                            user = FirebaseAuth.getInstance().getCurrentUser();
+                            userid = user.getUid();
+                            addUsers();
+
+                        } else {
+                            Toast.makeText(SignUpActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            progressBar.setVisibility(View.GONE);
+                            launchGo = true;
+                        }
+                    }
+                });
+            }
         }
     }
 
     public void addUsers() {
         userName = nameEditText.getText().toString();
         User user = new User(userid, userEmail, userPhone, userBusiness, location, userName);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         usersDataReference.child(userid).setValue(user);
-
         Message message = new Message(userid, timings, counter, notifications, sAvgToken);
         msgDataReference.child(userid).setValue(message).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -198,6 +248,7 @@ public class SignUpActivity extends AppCompatActivity {
                     finish();
                 } else {
                     Toast.makeText(SignUpActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    launchGo = true;
                 }
             }
         });

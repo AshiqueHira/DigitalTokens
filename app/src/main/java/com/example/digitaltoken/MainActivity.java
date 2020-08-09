@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
         }
 
         shimmerFrameLayout = findViewById(R.id.myShimmo);
-        //swipeRefreshLayout = findViewById(R.id.swipeRefresh);
         myRecyclerView = findViewById(R.id.recyclerView);
 
 
