@@ -92,6 +92,8 @@ public class SignUpActivity extends AppCompatActivity {
         townACTV = findViewById(R.id.townACTV);
         localityACTV = findViewById(R.id.streetACTV);
         districtSpinner = findViewById(R.id.districtSpinner);
+        progressBar = findViewById(R.id.progressBarsignup);
+        progressBar.setVisibility(View.GONE);
 
         addressEditText.setVisibility(View.GONE);
 
@@ -189,6 +191,7 @@ public class SignUpActivity extends AppCompatActivity {
     public void launchButton(View view) {
         networkMethod();
         if (launchGo) {
+            progressBar.setVisibility(View.VISIBLE);
             launchGo = false;
 
             myTown = townACTV.getText().toString();
@@ -249,6 +252,7 @@ public class SignUpActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(SignUpActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     launchGo = true;
+                    progressBar.setVisibility(View.VISIBLE);
                 }
             }
         });
