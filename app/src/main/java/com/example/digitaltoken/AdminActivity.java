@@ -141,8 +141,7 @@ public class AdminActivity extends AppCompatActivity {
 
             }
         });
-
-
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         //count = Integer.parseInt((String) counterTextView.getText());
         counterEditButton = findViewById(R.id.counterEditbutton);
         notesEditButton = findViewById(R.id.notesEditbutton);

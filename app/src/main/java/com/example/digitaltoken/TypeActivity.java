@@ -38,7 +38,6 @@ public class TypeActivity extends AppCompatActivity {
     EditText confirmEditText;
     EditText phoneEditText;
 
-    ProgressBar progressBar;
     ///////////  initialisation
 
     String businessType = "Select Facility Type";
@@ -134,9 +133,6 @@ public class TypeActivity extends AppCompatActivity {
                     return;
                 }
 
-
-                progressBar.setVisibility(View.VISIBLE);
-                // register the user in firebase
 
                 Intent intented = new Intent(getApplicationContext(), SignUpActivity.class);
                 intented.putExtra("email", email);

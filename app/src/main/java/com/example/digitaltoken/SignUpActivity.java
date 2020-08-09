@@ -63,6 +63,7 @@ public class SignUpActivity extends AppCompatActivity {
     String notifications = "No Notifications Yet";
     String sAvgToken = "0";
 
+    boolean launchGo = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,52 +170,56 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void launchButton(View view) {
 
+        if (launchGo) {
+            launchGo = false;
 
-        myTown = townACTV.getText().toString();
-        myLocality = localityACTV.getText().toString();
-        address = addressEditText.getText().toString();
+            myTown = townACTV.getText().toString();
+            myLocality = localityACTV.getText().toString();
+            address = addressEditText.getText().toString();
 
-        if (TextUtils.isEmpty(myTown)) {
-            townACTV.setError("Enter Your Town");
-            return;
-        }
-        if (TextUtils.isEmpty(myLocality)) {
-            localityACTV.setError("Enter Your Locality");
-            return;
-        }
-
-        if (myDistrict.equals("--Select Your District--") || TextUtils.isEmpty(myTown) || TextUtils.isEmpty(myLocality)) {
-            Toast.makeText(this, "Please Fill your Location details completly", Toast.LENGTH_LONG).show();
-
-        } else {
-            if (!TextUtils.isEmpty(address)) {
-                location = address + ", " + myLocality + ", " + myTown;
-            } else {
-                location = myLocality + ", " + myTown + ", " + myDistrict;
+            if (TextUtils.isEmpty(myTown)) {
+                townACTV.setError("Enter Your Town");
+                return;
             }
-            firebaseAuth.createUserWithEmailAndPassword(userEmail, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(SignUpActivity.this, "The User is Successfully Created", Toast.LENGTH_SHORT).show();
-                        user = FirebaseAuth.getInstance().getCurrentUser();
-                        userid = user.getUid();
-                        addUsers();
+            if (TextUtils.isEmpty(myLocality)) {
+                localityACTV.setError("Enter Your Locality");
+                return;
+            }
 
-                    } else {
-                        Toast.makeText(SignUpActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                        progressBar.setVisibility(View.GONE);
-                    }
+            if (myDistrict.equals("--Select Your District--") || TextUtils.isEmpty(myTown) || TextUtils.isEmpty(myLocality)) {
+                Toast.makeText(this, "Please Fill your Location details completly", Toast.LENGTH_LONG).show();
+
+            } else {
+                if (!TextUtils.isEmpty(address)) {
+                    location = address + ", " + myLocality + ", " + myTown;
+                } else {
+                    location = myLocality + ", " + myTown + ", " + myDistrict;
                 }
-            });
+                firebaseAuth.createUserWithEmailAndPassword(userEmail, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(SignUpActivity.this, "The User is Successfully Created", Toast.LENGTH_SHORT).show();
+                            user = FirebaseAuth.getInstance().getCurrentUser();
+                            userid = user.getUid();
+                            addUsers();
+
+                        } else {
+                            Toast.makeText(SignUpActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            progressBar.setVisibility(View.GONE);
+                            launchGo = true;
+                        }
+                    }
+                });
+            }
         }
     }
 
     public void addUsers() {
         userName = nameEditText.getText().toString();
         User user = new User(userid, userEmail, userPhone, userBusiness, location, userName);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         usersDataReference.child(userid).setValue(user);
-
         Message message = new Message(userid, timings, counter, notifications, sAvgToken);
         msgDataReference.child(userid).setValue(message).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -225,6 +230,7 @@ public class SignUpActivity extends AppCompatActivity {
                     finish();
                 } else {
                     Toast.makeText(SignUpActivity.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    launchGo = true;
                 }
             }
         });

@@ -93,15 +93,11 @@ public class TokenStatus extends AppCompatActivity {
 
     SharedPreferences alarmPreferences;
     SharedPreferences yourTokenPreferences;
-    SharedPreferences userIdPreferences;
-    SharedPreferences headingPreferences;
-    SharedPreferences discPreferences;
+
 
     String alarmKey;
     String tokenKey;
-    String uidKey;
-    String headingKey;
-    String discKey;
+
 
     int savedAlarmToken;
     int savedYourToken;
