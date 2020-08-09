@@ -67,6 +67,5 @@ public class CheckNetwork {
         //should check null because in airplane mode it will be null
         return (netInfo != null && netInfo.isConnected());
 
-
     }
 }

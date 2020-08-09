@@ -64,6 +64,9 @@ public class SignUpActivity extends AppCompatActivity {
     String sAvgToken = "0";
 
     boolean launchGo = true;
+
+    CheckNetwork myNetwork = new CheckNetwork(this);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,11 @@ public class SignUpActivity extends AppCompatActivity {
         userPhone = intent.getStringExtra("phoneNumber");
         userBusiness = intent.getStringExtra("bussinessType");
         password = intent.getStringExtra("password");
+
+        myNetwork.myNetworkCheck();
+        if (!CheckNetwork.isNetworkConnected) {
+            Toast.makeText(this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
+        }
 
         firebaseAuth = FirebaseAuth.getInstance();
         usersDataReference = FirebaseDatabase.getInstance().getReference("Users");
@@ -168,8 +176,18 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    public void launchButton(View view) {
+    public void networkMethod() {
+        myNetwork.myNetworkCheck();
+        if (!CheckNetwork.isNetworkConnected) {
+            Toast.makeText(this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
+            launchGo = false;
+        } else {
+            launchGo = true;
+        }
+    }
 
+    public void launchButton(View view) {
+        networkMethod();
         if (launchGo) {
             launchGo = false;
 
