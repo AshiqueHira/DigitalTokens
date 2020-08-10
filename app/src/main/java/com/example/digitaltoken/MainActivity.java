@@ -132,14 +132,18 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
                 userBusiness = dataSnapshot.getValue(User.class).getUserBusiness();
                 if (userBusiness.equals("Doctor(Self Service)")) {
                     userImage = "doctor";
+                } else if (userBusiness.equals("Doctor(Clinic Service)")) {
+                    userImage = "clinic";
+                } else if (userBusiness.equals("Doctor(Hospital Service)")) {
+                    userImage = "hospital";
                 } else if (userBusiness.equals("Ration Shop")) {
                     userImage = "ration";
                 } else if (userBusiness.equals("Sales Shop")) {
-                    userImage = "sales";
+                    userImage = "cart";
                 } else if (userBusiness.equals("Flour Mill")) {
                     userImage = "flour";
                 } else if (userBusiness.equals("Govt. Hospital")) {
-                    userImage = "govermenthospital";
+                    userImage = "hospital";
                 } else if (userBusiness.equals("Bank")) {
                     userImage = "bank";
                 }
@@ -179,7 +183,6 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
         m.setMyTitle(myname);
         m.setMyDisc(mylocation);
         m.setMyImg(getResources().getIdentifier(imagefile, "drawable", getPackageName()));
-        //m.setMyImg(R.drawable.homedr);
         m.setMyuid(usersId);
 
         models.add(m);
