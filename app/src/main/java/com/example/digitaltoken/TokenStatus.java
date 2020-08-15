@@ -126,7 +126,6 @@ public class TokenStatus extends AppCompatActivity {
         heading = intent.getStringExtra("name");
         description = intent.getStringExtra("location");
         userid = intent.getStringExtra("userId");
-
         getSupportActionBar().setTitle(heading);
         getSupportActionBar().setSubtitle(description);
 

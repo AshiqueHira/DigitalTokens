@@ -1,5 +1,6 @@
 package com.example.digitaltoken;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,10 +19,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -70,13 +73,13 @@ public class AdminActivity extends AppCompatActivity {
     private Chronometer chronometer;
     private boolean isRunning = false;
     ArrayList<Integer> times = new ArrayList<Integer>();
-    SharedPreferences arrayPreferences;
     int intDuration;
     int sevenSetter = 0;
     int avg = 0;
     int dbControlInt;
     boolean dbControlBol = false;
-    boolean forceStop = false;
+
+    CheckNetwork myNetwork = new CheckNetwork(this);
 
 
     @Override
@@ -93,7 +96,6 @@ public class AdminActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.myActionBar);
         setSupportActionBar(toolbar);
-
         notesTextView = findViewById(R.id.notesTV);
         counterTextView = findViewById(R.id.counterTV);
         openTextView = findViewById(R.id.timingTV);
@@ -106,6 +108,8 @@ public class AdminActivity extends AppCompatActivity {
         sevenSetter = 0;
         isRunning = false;
         avg = -1;
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         msg = FirebaseAuth.getInstance().getCurrentUser();
         userid = msg.getUid();
@@ -141,7 +145,7 @@ public class AdminActivity extends AppCompatActivity {
 
             }
         });
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
         //count = Integer.parseInt((String) counterTextView.getText());
         counterEditButton = findViewById(R.id.counterEditbutton);
         notesEditButton = findViewById(R.id.notesEditbutton);
@@ -191,6 +195,12 @@ public class AdminActivity extends AppCompatActivity {
 
             }
         });
+        dialogCounter.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
 
 
         dialogNotes.setButton(DialogInterface.BUTTON_POSITIVE, "Save", new DialogInterface.OnClickListener() {
@@ -200,10 +210,16 @@ public class AdminActivity extends AppCompatActivity {
                 notesTextView.setText(notifications);
 
                 // value to be passed to firebase
-
+                networkChecking();
                 updateDatas();
             }
 
+        });
+        dialogNotes.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
         });
 
         dialogOpen.setButton(DialogInterface.BUTTON_POSITIVE, "Save", new DialogInterface.OnClickListener() {
@@ -217,6 +233,12 @@ public class AdminActivity extends AppCompatActivity {
                 updateDatas();
             }
         });
+        dialogOpen.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
 
         openTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -226,15 +248,21 @@ public class AdminActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
 
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+        finish();
+        super.onBackPressed();
     }
 
     public void counterClick(View view) {
-
         counterEditText.setText(counterTextView.getText());
         dialogCounter.show();
     }
+
 
     public void notesClick(View view) {
         notesEditText.setText(notesTextView.getText());
@@ -250,6 +278,7 @@ public class AdminActivity extends AppCompatActivity {
             /// value to be passed to firebase
             counter = Integer.toString(count);
             updateDatas();
+            networkChecking();
         }
 
     }
@@ -263,6 +292,7 @@ public class AdminActivity extends AppCompatActivity {
             /// value to be passed to firebase
             counter = Integer.toString(count);
             updateDatas();
+            networkChecking();
         }
     }
 
@@ -277,13 +307,10 @@ public class AdminActivity extends AppCompatActivity {
             sevenSetter = 0;
             isRunning = false;
             msgDataReference.child(userid).child("avgToken").setValue(avgToken);
-            Log.e("the upper Value", avgToken);
         } else if (avg != -1) {
             msgDataReference.child(userid).child("avgToken").setValue(avgToken);
-            Log.e("the lower Value", avgToken);
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -300,7 +327,6 @@ public class AdminActivity extends AppCompatActivity {
         }
         return false;
     }
-
 
     public void chronoMethod() {
 
@@ -325,11 +351,16 @@ public class AdminActivity extends AppCompatActivity {
             avg = 0;
             for (int i = sevenSetter - 1; (i + 1) > j; i--) {
                 sum += times.get(i);
-                Log.e("the sum is ", String.valueOf(sum));
             }
             avg = sum / 7;
             avgToken = String.valueOf(avg);
-            Log.e("the counter is", String.valueOf(sevenSetter));
+        }
+    }
+
+    public void networkChecking() {
+        myNetwork.myNetworkCheck();
+        if (!CheckNetwork.isNetworkConnected) {
+            Toast.makeText(this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
     String userBusiness = "default";
     String userImage = "noimage";
 
+
     List<String> list = new ArrayList<>();
 
     CheckNetwork myNetwork = new CheckNetwork(this);
@@ -75,12 +76,12 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         toolbar = findViewById(R.id.myActionBar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("itoken");
 
-        if (!myNetwork.isNetworkConnected) {
+        myNetwork.myNetworkCheck();
+        if (!CheckNetwork.isNetworkConnected) {
             Toast.makeText(this, "Please check your Internet Connection", Toast.LENGTH_SHORT).show();
         }
 
@@ -127,10 +128,9 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
                 //Log.e("the error is ", String.valueOf(dataSnapshot.getValue()));
                 location = dataSnapshot.getValue(User.class).getUserLocation();
                 userId = dataSnapshot.getValue(User.class).getUsersId();
-
-                // setting up image in recyclerview
                 userBusiness = dataSnapshot.getValue(User.class).getUserBusiness();
-                if (userBusiness.equals("Doctor(Self Service)")) {
+
+                if (userBusiness.equals("Doctor(Home Service)")) {
                     userImage = "doctor";
                 } else if (userBusiness.equals("Doctor(Clinic Service)")) {
                     userImage = "clinic";
@@ -143,12 +143,12 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
                 } else if (userBusiness.equals("Flour Mill")) {
                     userImage = "flour";
                 } else if (userBusiness.equals("Govt. Hospital")) {
-                    userImage = "hospital";
+                    userImage = "govhospital";
                 } else if (userBusiness.equals("Bank")) {
                     userImage = "bank";
                 }
 
-                insertDatas(name, location, userId, userImage);
+                insertDatas(name, location, userId, userImage, userBusiness);
                 myRecyclerAdapter.notifyDataSetChanged();
             }
 
@@ -176,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
 
     }
 
-    public void insertDatas(String myname, String mylocation, String usersId, String imagefile) {
+    public void insertDatas(String myname, String mylocation, String usersId, String imagefile, String myBusiness) {
 
 
         MyModel m = new MyModel();
@@ -184,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
         m.setMyDisc(mylocation);
         m.setMyImg(getResources().getIdentifier(imagefile, "drawable", getPackageName()));
         m.setMyuid(usersId);
+        m.setMyBusiness(myBusiness);
 
         models.add(m);
         if (!models.isEmpty()) {
@@ -191,8 +192,6 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
             shimmerFrameLayout.setVisibility(View.GONE);
             myRecyclerView.setVisibility(View.VISIBLE);
         }
-
-
     }
 
 
@@ -240,6 +239,8 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
             if (name.getMyTitle().toLowerCase().contains(userInput)) {
                 newList.add(name);
             } else if (name.getMyDisc().toLowerCase().contains(userInput)) {
+                newList.add(name);
+            } else if (name.getMyBusiness().toLowerCase().contains(userInput)) {
                 newList.add(name);
             }
         }

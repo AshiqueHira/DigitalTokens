@@ -14,6 +14,7 @@
 
 
     <application
+        android:name=".MApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
@@ -47,16 +48,23 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:name=".SplashScreen"
+            android:theme="@style/splashtheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".TokenStatus"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"></activity>
 
         <meta-data
