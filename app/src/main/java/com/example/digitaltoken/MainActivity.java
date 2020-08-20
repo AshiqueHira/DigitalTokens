@@ -207,6 +207,9 @@ public class MainActivity extends AppCompatActivity implements CardClickListner,
         } else if (item.getItemId() == R.id.search) {
             SearchView searchView = (SearchView) item.getActionView();
             searchView.setOnQueryTextListener(this);
+        } else if (item.getItemId() == R.id.about) {
+            Intent aboutIntent = new Intent(getApplicationContext(), SupportActivity.class);
+            startActivity(aboutIntent);
         }
         return false;
     }
