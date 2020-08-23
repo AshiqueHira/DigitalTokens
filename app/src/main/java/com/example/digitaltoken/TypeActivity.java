@@ -50,6 +50,8 @@ public class TypeActivity extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
+    FirebaseAuth firebaseAuth;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +68,7 @@ public class TypeActivity extends AppCompatActivity {
         phoneEditText = findViewById(R.id.phoneEditText);
 
 
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.INVISIBLE);
+        firebaseAuth = FirebaseAuth.getInstance();
 
 
         final List<String> list = new ArrayList<>();
@@ -140,6 +141,9 @@ public class TypeActivity extends AppCompatActivity {
                 intented.putExtra("bussinessType", businessType);
                 intented.putExtra("password", password);
                 startActivity(intented);
+                if (firebaseAuth.getCurrentUser() != null) {
+                    finish();
+                }
 
             }
         });

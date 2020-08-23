@@ -21,6 +21,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -126,7 +127,6 @@ public class TokenStatus extends AppCompatActivity {
         heading = intent.getStringExtra("name");
         description = intent.getStringExtra("location");
         userid = intent.getStringExtra("userId");
-
         getSupportActionBar().setTitle(heading);
         getSupportActionBar().setSubtitle(description);
 
@@ -398,6 +398,7 @@ public class TokenStatus extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         Vibrator vibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_access_alarm_black_24dp)
                 .setContentTitle("Token Reminder")
@@ -405,6 +406,7 @@ public class TokenStatus extends AppCompatActivity {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setVibrate(new long[]{100, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000})
+                .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.alarm))
                 // Set the intent that will fire when the user taps the notification
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);

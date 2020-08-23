@@ -86,6 +86,7 @@ public class SignUpActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         usersDataReference = FirebaseDatabase.getInstance().getReference("Users");
         msgDataReference = FirebaseDatabase.getInstance().getReference("Messages");
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         nameEditText = findViewById(R.id.nameEditText);
         addressEditText = findViewById(R.id.addressEditText);
@@ -97,20 +98,19 @@ public class SignUpActivity extends AppCompatActivity {
 
         addressEditText.setVisibility(View.GONE);
 
-
         if (userBusiness.equals("Bank")) {
             nameEditText.setHint("Bank Name");
         } else if (userBusiness.equals("Doctor(Home Service)")) {
-            nameEditText.setHint("Dr. Name");
+            nameEditText.setHint("Name example: Dr. John MBBS, MD, General Medicine");
 
         } else if (userBusiness.equals("Doctor(Clinic Service)")) {
             addressEditText.setVisibility(View.VISIBLE);
-            nameEditText.setHint("Dr. Name");
+            nameEditText.setHint("Dr. Name Example: Dr. John MBBS, MD, General Medicine");
             addressEditText.setHint("Clinic Name");
 
         } else if (userBusiness.equals("Doctor(Hospital Service)")) {
             addressEditText.setVisibility(View.VISIBLE);
-            nameEditText.setHint("Dr. Name");
+            nameEditText.setHint("Dr. Name Example: Dr. John MBBS, MD, General Medicine");
             addressEditText.setHint("Hospital Name");
 
         } else if (userBusiness.equals("Flour Mill")) {
@@ -169,7 +169,6 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 myDistrict = district[position];
-                Toast.makeText(SignUpActivity.this, myDistrict, Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -209,7 +208,6 @@ public class SignUpActivity extends AppCompatActivity {
 
             if (myDistrict.equals("--Select Your District--") || TextUtils.isEmpty(myTown) || TextUtils.isEmpty(myLocality)) {
                 Toast.makeText(this, "Please Fill your Location details completly", Toast.LENGTH_LONG).show();
-
             } else {
                 if (!TextUtils.isEmpty(address)) {
                     location = address + ", " + myLocality + ", " + myTown;
@@ -239,7 +237,6 @@ public class SignUpActivity extends AppCompatActivity {
     public void addUsers() {
         userName = nameEditText.getText().toString();
         User user = new User(userid, userEmail, userPhone, userBusiness, location, userName);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         usersDataReference.child(userid).setValue(user);
         Message message = new Message(userid, timings, counter, notifications, sAvgToken);
         msgDataReference.child(userid).setValue(message).addOnCompleteListener(new OnCompleteListener<Void>() {
